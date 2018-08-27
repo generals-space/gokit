@@ -1,0 +1,30 @@
+syntax = "proto3";
+package main;
+
+message Empty{}
+
+message GetUserRequest{
+    string Name = 1;
+}
+
+message GetUserResponse{
+    string Name = 1;
+    string Title = 2;
+    string Company = 3;
+}
+
+message DispatchRequest{
+    string Name = 1;
+    string Company = 2;
+}
+
+message SetTitleRequest{
+    string Name = 1;
+    string Title = 2;
+}
+
+service UserManagerService{
+    rpc GetUser (GetUserRequest) returns (GetUserResponse);
+    rpc Dispatch (DispatchRequest) returns (Empty);
+    rpc SetTitle (SetTitleRequest) returns (Empty);
+}
