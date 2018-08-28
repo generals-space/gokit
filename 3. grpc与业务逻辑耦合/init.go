@@ -1,10 +1,24 @@
 package main
 
+import "errors"
+
+// ErrUserNotFound ...
+var ErrUserNotFound = errors.New("目标用户不存在")
+var ServerAddr = ":7718"
+var uManagerServiceServer *UManagerServiceServer
+
+// User ...
+type User struct {
+	Name    string
+	Title   string
+	Company string
+}
+
 func init() {
-	// 真实场景中, 业务服务就不会有这么简单了.
-	// 可能涉及到读取配置, 数据库连接等操作.
+	// 真实场景中, 业务服务就不会有这么简单了. 
+	// 可能涉及到读取配置, 数据库连接等操作. 
 	// 这里可以简单地把UserManager看成一张表, ta的成员方法就是传统的CURD的模拟操作.
-	userManager = &UserManager{
+	uManagerServiceServer = &UManagerServiceServer{
 		Users: []*User{
 			&User{
 				Name:    "李彦宏",
