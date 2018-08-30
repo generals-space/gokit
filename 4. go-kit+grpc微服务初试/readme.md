@@ -1,3 +1,9 @@
+参考文章
+
+1. [stringsvc1](http://gokit.io/examples/stringsvc.html#stringsvc1)
+
+2. [go-kit 与 grpc 结合开发微服务](http://www.articlechain.cn/articles/2018/04/27/1524822459139)
+
 go-kit是什么这里就不介绍了, 就算写也不如网上的文章写的正规. 这里简单记录一下go-kit中提供的3个核心概念
 
 1. Service
@@ -17,3 +23,33 @@ go-kit官方示例`stringsvc1`中对这三个概念表现的比较得...一般.
 这里说一下, `stringsvc1`中把`Service`包装为`Endpoint`类型的部分, 也就是`makeXXXEndpoint`函数, 是不是和grpc中的服务端代码很像? 不过这里没有用protobuf, 而是直接定义了`uppercaseRequest`, `uppercaseResponse`这种结构体. 从`Transport`访问到`Service`过程中, 有参数与响应的转换操作. 
 
 在我们的示例中, 把这部分用gprc + protobuf代替, 同时把客户端操作抽象成另一个子服务, 来体现`Endpoint`的作用.
+
+------
+
+## 关于`transport.NewServer()`构造出来的`handler`函数
+
+在`stringsvc1`中类似如下
+
+```go
+	countHandler := httptransport.NewServer(
+		makeCountEndpoint(svc),
+		decodeCountRequest,
+		encodeResponse,
+	)
+```
+
+在参考文章2中的示例如下
+
+```go
+    bookListHandler := grpc_transport.NewServer(  
+        makeGetBookListEndpoint(),
+        decodeRequest,
+        encodeResponse,
+    )
+```
+
+其实`makeXXXEndpoint()`的结果已经很明确了, 就是单纯的grpc server的实现代码. 而不同的`transport`执行的`NewServer()`只是go-kit提供的, 为我们包装为不同的类型的公开接口的处理函数而已.
+
+http的NewServer得到了不同路由的handler, 可以理解为'控制器(controller)', 而`grpc`的NewServer则得到了...咳, 好像跟单纯的grpc接口没什么不同啊.
+
+因为你看, 在http的NewServer中, 对应的`encode`与`decode`函数需要从request的body中读取并反序列化, 再把response的结构体对象序列化; 而在grpc的NewServer中, `encode`与`decode`函数根本什么也没做, 直接透传的.
