@@ -2,7 +2,7 @@ package user_manager
 
 import (
 	"errors"
-	"github.com/generals-space/gokit/4.go-kit+grpc微服务初试/common"
+	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
 )
 
 // UserManager ...
