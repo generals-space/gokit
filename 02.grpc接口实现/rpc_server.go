@@ -9,11 +9,11 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-// uManagerServiceServer ...
-type uManagerServiceServer struct{}
+// UManagerServiceServer ...
+type UManagerServiceServer struct{}
 
 // GetUser ...
-func (server *uManagerServiceServer) GetUser(ctx context.Context, req *GetUserRequest) (res *GetUserResponse, err error) {
+func (server *UManagerServiceServer) GetUser(ctx context.Context, req *GetUserRequest) (res *GetUserResponse, err error) {
 	user, err := userManager.GetUser(req.Name)
 	if err != nil {
 		return
@@ -27,12 +27,12 @@ func (server *uManagerServiceServer) GetUser(ctx context.Context, req *GetUserRe
 }
 
 // SetTitle ...
-func (server *uManagerServiceServer) SetTitle(ctx context.Context, req *SetTitleRequest) (res *Empty, err error) {
+func (server *UManagerServiceServer) SetTitle(ctx context.Context, req *SetTitleRequest) (res *Empty, err error) {
 	return &Empty{}, userManager.SetTitle(req.Name, req.Title)
 }
 
 // Dispatch ...
-func (server *uManagerServiceServer) Dispatch(ctx context.Context, req *DispatchRequest) (res *Empty, err error) {
+func (server *UManagerServiceServer) Dispatch(ctx context.Context, req *DispatchRequest) (res *Empty, err error) {
 	return &Empty{}, userManager.Dispatch(req.Name, req.Company)
 }
 
@@ -45,7 +45,7 @@ func NewServer() {
 	}
 	rpcServer := grpc.NewServer()
 	log.Println("server: 注册服务")
-	RegisterUserManagerServiceServer(rpcServer, &uManagerServiceServer{})
+	RegisterUserManagerServiceServer(rpcServer, &UManagerServiceServer{})
 	reflection.Register(rpcServer)
 	log.Println("server: 等待连接")
 	if err := rpcServer.Serve(lis); err != nil {
