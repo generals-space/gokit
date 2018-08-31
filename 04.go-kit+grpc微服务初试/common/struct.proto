@@ -1,0 +1,33 @@
+syntax="proto3";
+package common;
+
+message Empty{}
+
+// UserManager相关///////////////////////////////////////////////////////
+
+message GetUserRequest{
+    string Name = 1;
+}
+
+message GetUserResponse{
+    string Name = 1;
+    string Company = 3;
+}
+
+message AddUserRequest{
+    string Name = 1;
+    string Company = 2;
+}
+
+message DispatchRequest{
+    string Name = 1;
+    string Company = 2;
+}
+
+service UserManagerService{
+    rpc GetUser (GetUserRequest) returns (GetUserResponse);
+    rpc AddUser (AddUserRequest) returns (Empty);
+    rpc Dispatch (DispatchRequest) returns (Empty);
+}
+
+// Department相关///////////////////////////////////////////////////////

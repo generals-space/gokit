@@ -1,7 +1,8 @@
-package user_manager
+package usermanager
 
 import (
 	"errors"
+
 	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
 )
 
@@ -12,6 +13,7 @@ type UserManager struct {
 
 // ErrUserNotFound ...
 var ErrUserNotFound = errors.New("目标用户不存在")
+
 // GetUser ...
 func (m *UserManager) GetUser(name string) (user *common.User, err error) {
 	for _, u := range m.Users {
@@ -33,14 +35,12 @@ func (m *UserManager) Dispatch(name, company string) (err error) {
 	return ErrUserNotFound
 }
 
-// SetTitle ...
-func (m *UserManager) SetTitle(name, title string) (err error) {
-	for _, u := range m.Users {
-		if u.Name == name {
-			u.Title = title
-			return nil
-		}
+// AddUser ...
+func (m *UserManager) AddUser(name, company string) (err error) {
+	newUser := &common.User{
+		Name:    name,
+		Company: company,
 	}
-	return ErrUserNotFound
+	m.Users = append(m.Users, newUser)
+	return
 }
-
