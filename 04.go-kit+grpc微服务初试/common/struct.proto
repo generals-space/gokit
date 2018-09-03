@@ -4,7 +4,10 @@ package common;
 message Empty{}
 
 // UserManager相关///////////////////////////////////////////////////////
-
+message User{
+    string Name = 1;
+    string Company = 2;
+}
 message GetUserRequest{
     string Name = 1;
 }
@@ -31,3 +34,14 @@ service UserManagerService{
 }
 
 // Department相关///////////////////////////////////////////////////////
+message Department{
+    string Name = 1;
+    repeated User Users = 2;
+}
+message DepartmentList{
+    repeated Department List = 1;
+}
+service DepartmentManagerService{
+    rpc List(Empty) returns(DepartmentList);
+    rpc Create(Department) returns(Empty);
+}

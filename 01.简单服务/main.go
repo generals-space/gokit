@@ -60,17 +60,17 @@ func init() {
 			&User{
 				Name:    "李彦宏",
 				Title:   "总经理",
-				Company: "北京",
+				Company: "百度",
 			},
 			&User{
 				Name:    "马云",
 				Title:   "市场总监",
-				Company: "杭州",
+				Company: "阿里",
 			},
 			&User{
 				Name:    "马化腾",
 				Title:   "商务专员",
-				Company: "广州",
+				Company: "腾讯",
 			},
 		},
 	}
@@ -81,7 +81,7 @@ func main() {
 		log.Printf("%+v\n", u)
 	}
 	var err error
-	err = userManager.Dispatch("马化腾", "北京")
+	err = userManager.Dispatch("马化腾", "百度")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -93,7 +93,7 @@ func main() {
 	for _, u := range userManager.Users {
 		log.Printf("%+v\n", u)
 	}
-	
+
 	log.Println("搜索马云...")
 	mayun, err := userManager.GetUser("马云")
 	if err != nil {

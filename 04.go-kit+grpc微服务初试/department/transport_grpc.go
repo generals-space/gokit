@@ -1,0 +1,73 @@
+package department
+
+import (
+	"context"
+	"log"
+	"net"
+
+	"google.golang.org/grpc"
+
+	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
+	transport_grpc "github.com/go-kit/kit/transport/grpc"
+)
+
+// DManagerServiceServer ...
+type DManagerServiceServer struct {
+	CreateHandler transport_grpc.Handler
+	ListHandler   transport_grpc.Handler
+}
+
+// List ...
+func (server *DManagerServiceServer) List(ctx context.Context, req *common.Empty) (res *common.DepartmentList, err error) {
+	_, resp, err := server.ListHandler.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*common.DepartmentList), nil
+}
+
+// Create ...
+func (server *DManagerServiceServer) Create(ctx context.Context, req *common.Department) (res *common.Empty, err error) {
+	_, resp, err := server.CreateHandler.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*common.Empty), nil
+}
+
+func decodeGrpcRequest(_ context.Context, req interface{}) (interface{}, error) {
+	return req, nil
+}
+
+func encodeGrpcResponse(_ context.Context, req interface{}) (interface{}, error) {
+	return req, nil
+}
+
+// NewGrpcServer ...
+func NewGrpcServer(srv *DepartmentManager) *DManagerServiceServer {
+	listHandler := transport_grpc.NewServer(
+		makeListEndpoint(srv),
+		decodeGrpcRequest,
+		encodeGrpcResponse,
+	)
+	createHandler := transport_grpc.NewServer(
+		makeCreateEndpoint(srv),
+		decodeGrpcRequest,
+		encodeGrpcResponse,
+	)
+	return &DManagerServiceServer{
+		CreateHandler: createHandler,
+		ListHandler:   listHandler,
+	}
+}
+
+// StartGrpcTransport ...
+func StartGrpcTransport(srv *DepartmentManager) {
+	log.Println("starting department manager http transport...")
+
+	lis, _ := net.Listen("tcp", common.DepartmentGrpcTransportAddr)
+	gprcServer := grpc.NewServer()
+	dManagerServiceServer := NewGrpcServer(srv)
+	common.RegisterDepartmentManagerServiceServer(gprcServer, dManagerServiceServer)
+	gprcServer.Serve(lis)
+}
