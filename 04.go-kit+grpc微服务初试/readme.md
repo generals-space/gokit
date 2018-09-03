@@ -16,7 +16,7 @@ go-kit官方示例`stringsvc1`中对这三个概念表现的比较得...一般.
 
 `Service`即是我们的业务逻辑, 为了得到清晰的分层架构, `Service`独立与另外两者, 且划分地很明确.(只不过`stringsvc1`用了接口表示, 感觉多此一举)
 
-`Endpoint`是项目内部微服务之间通信的接口, 每个endpoint相当于protobuf中一个rpc字段. 在`stringsvc1`中并没有内部子服务间的交互, 而是直接把`Service`暴露为http接口了, 所以这部分的作用没有体现出来.
+`Endpoint`是项目内部微服务之间通信的接口, 每个endpoint相当于protobuf中一个rpc字段. 在`stringsvc1`中并没有内部子服务间的交互, 而是直接把`Service`暴露为http接口了, 所以这部分的作用没有体现出来. ta是单个微服务模块, 但也是一个完整的服务.
 
 `Transport`是go-kit为我们提供的, 暴露给外部访问的入口. 有grpc, 也有restful类型. 示例中为restful, 使用curl访问即可.
 
