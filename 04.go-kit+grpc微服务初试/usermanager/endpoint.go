@@ -12,14 +12,14 @@ import (
 
 func makeAddUserEndpoint(srv *UserManager) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(common.AddUserRequest)
+		req := request.(*common.AddUserRequest)
 		return &common.Empty{}, srv.AddUser(req.Name, req.Company)
 	}
 }
 
 func makeGetUserEndpoint(srv *UserManager) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(common.GetUserRequest)
+		req := request.(*common.GetUserRequest)
 		user, err := srv.GetUser(req.Name)
 		if err != nil {
 			return nil, err
@@ -33,7 +33,7 @@ func makeGetUserEndpoint(srv *UserManager) endpoint.Endpoint {
 
 func makeDispatchEndpoint(srv *UserManager) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(common.DispatchRequest)
+		req := request.(*common.DispatchRequest)
 		return &common.Empty{}, srv.Dispatch(req.Name, req.Company)
 	}
 }

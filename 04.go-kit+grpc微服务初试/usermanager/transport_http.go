@@ -10,6 +10,7 @@ import (
 
 // StartHTTPTransport 启动http transport
 func StartHTTPTransport(srv *UserManager) {
+	log.Println("starting user manager http transport...")
 	getUserHandler := transport_http.NewServer(
 		makeGetUserEndpoint(srv),
 		decodeHTTPRequest("GetUser"),

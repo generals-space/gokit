@@ -2,6 +2,7 @@ package usermanager
 
 import (
 	"context"
+	"log"
 	"net"
 
 	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
@@ -53,6 +54,7 @@ func encodeGrpcResponse(_ context.Context, req interface{}) (interface{}, error)
 
 // NewGrpcServer ...
 func NewGrpcServer(service *UserManager) *UManagerServiceServer {
+	log.Println("starting user manager http transport...")
 	GetUserHandler := transport_grpc.NewServer(
 		makeGetUserEndpoint(service),
 		decodeGrpcRequest,
@@ -78,7 +80,6 @@ func NewGrpcServer(service *UserManager) *UManagerServiceServer {
 
 // StartGrpcTransport 启动http transport
 func StartGrpcTransport(srv *UserManager) {
-
 	lis, _ := net.Listen("tcp", common.UserManagerGrpcTransportAddr)
 	gprcServer := grpc.NewServer()
 	uManagerServiceServer := NewGrpcServer(srv)

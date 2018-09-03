@@ -12,8 +12,6 @@ type Department struct{
 	Users []*User
 }
 
-var UserManagerServerAddr = ":7718"
-var DepartmentServerAddr = ":7719"
 var UserManagerHttpTransportAddr = ":8081"
 var DepartmentHttpTransportAddr = ":8082"
 var UserManagerGrpcTransportAddr = ":9001"
