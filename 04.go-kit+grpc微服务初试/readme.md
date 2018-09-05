@@ -53,3 +53,15 @@ go-kit官方示例`stringsvc1`中对这三个概念表现的比较得...一般.
 http的NewServer得到了不同路由的handler, 可以理解为'控制器(controller)', 而`grpc`的NewServer则得到了...咳, 好像跟单纯的grpc接口没什么不同啊.
 
 因为你看, 在http的NewServer中, 对应的`encode`与`decode`函数需要从request的body中读取并反序列化, 再把response的结构体对象序列化; 而在grpc的NewServer中, `encode`与`decode`函数根本什么也没做, 直接透传的.
+
+示例
+
+```
+curl -X POST -d '{"name": "马云"}' localhost:8081/user/query
+{"Name":"马云","Company":"阿里"}
+```
+
+```
+curl -X POST -d '{}' localhost:8082/department/list
+{"List":[{"Name":"百度","Users":[{"Name":"李彦宏","Company":"百度"}]},{"Name":"阿里","Users":[{"Name":"马云","Company":"阿里"}]},{"Name":"腾讯","Users":[{"Name":"马化腾","Company":"腾讯"}]}]}
+```

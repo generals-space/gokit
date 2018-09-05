@@ -3,22 +3,37 @@ package department
 import (
 	"log"
 	"net/http"
-
+	"context"
+	"encoding/json"
+	
 	transport_http "github.com/go-kit/kit/transport/http"
 
 	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
 )
 
+func decodeHTTPRequest(request interface{}) func(context.Context, *http.Request) (interface{}, error) {
+	return func(_ context.Context, r *http.Request) (interface{}, error) {
+		if err := json.NewDecoder(r.Body).Decode(request); err != nil {
+			return nil, err
+		}
+		return request, nil
+	}
+}
+
+func encodeHTTPResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	return json.NewEncoder(w).Encode(response)
+}
+
 // StartHTTPTransport ...
 func StartHTTPTransport(srv *DepartmentManager) {
 	listHandler := transport_http.NewServer(
 		makeListEndpoint(srv),
-		decodeHTTPRequest("List"),
+		decodeHTTPRequest(&common.Empty{}),
 		encodeHTTPResponse,
 	)
 	createHandler := transport_http.NewServer(
 		makeCreateEndpoint(srv),
-		decodeHTTPRequest("Create"),
+		decodeHTTPRequest(&common.Department{}),
 		encodeHTTPResponse,
 	)
 
