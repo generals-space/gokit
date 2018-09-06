@@ -18,7 +18,7 @@ go-kit官方示例`stringsvc1`中对这三个概念表现的比较得...一般.
 
 `Endpoint`是项目内部微服务之间通信的接口, 每个endpoint相当于protobuf中一个rpc字段. 在`stringsvc1`中并没有内部子服务间的交互, 而是直接把`Service`暴露为http接口了, 所以这部分的作用没有体现出来. ta是单个微服务模块, 但也是一个完整的服务.
 
-`Transport`是go-kit为我们提供的, 暴露给外部访问的入口. 有grpc, 也有restful类型. 示例中为restful, 使用curl访问即可.
+`Transport`是go-kit为我们提供的, 暴露给外部访问的入口. 有grpc, 也有restful类型. `stringsvc1`示例中为restful, 使用curl访问即可.
 
 这里说一下, `stringsvc1`中把`Service`包装为`Endpoint`类型的部分, 也就是`makeXXXEndpoint`函数, 是不是和grpc中的服务端代码很像? 不过这里没有用protobuf, 而是直接定义了`uppercaseRequest`, `uppercaseResponse`这种结构体. 从`Transport`访问到`Service`过程中, 有参数与响应的转换操作. 
 
@@ -54,14 +54,46 @@ http的NewServer得到了不同路由的handler, 可以理解为'控制器(contr
 
 因为你看, 在http的NewServer中, 对应的`encode`与`decode`函数需要从request的body中读取并反序列化, 再把response的结构体对象序列化; 而在grpc的NewServer中, `encode`与`decode`函数根本什么也没做, 直接透传的.
 
-示例
+------
+
+在我们的例子中, 假想了两个服务: 员工管理中心UserManager与部门管理中心DepartmentManager. 有一些初始数据...不要在意数据内容.
+
+我们可以创建新部门, 并指定新部门的人员选择, DepartmentManager会调用UserManager服务的`AddUser`完成人员记录的创建.
+
+另外可以进行人员的委派, 这会更改员工记录中的所属部门, 另外在部门管理中心服务中也会更新部门下的员工.
+
+示例如下
+
+查询
 
 ```
-curl -X POST -d '{"name": "马云"}' localhost:8081/user/query
-{"Name":"马云","Company":"阿里"}
-```
+$ curl -X POST -d '{}' localhost:10000/user/list
+{"List":[{"Name":"李彦宏","Company":"百度"},{"Name":"马云","Company":"阿里"},{"Name":"马化腾","Company":"腾讯"}]}
 
-```
-curl -X POST -d '{}' localhost:8082/department/list
+$ curl -X POST -d '{}' localhost:10000/department/list
 {"List":[{"Name":"百度","Users":[{"Name":"李彦宏","Company":"百度"}]},{"Name":"阿里","Users":[{"Name":"马云","Company":"阿里"}]},{"Name":"腾讯","Users":[{"Name":"马化腾","Company":"腾讯"}]}]}
 ```
+
+创建新部门
+
+```
+$ curl -X POST -d '{"name": "京东", "users": [{"name": "刘强东", "company": "京东"}]}' localhost:10000/department/create
+{}
+$ curl -X POST -d '{}' localhost:10000/user/list
+{"List":[{"Name":"李彦宏","Company":"百度"},{"Name":"马云","Company":"阿里"},{"Name":"马化腾","Company":"腾讯"},{"Name":"刘强东","Company":"京东"}]}
+$ curl -X POST -d '{}' localhost:10000/department/list
+{"List":[{"Name":"百度","Users":[{"Name":"李彦宏","Company":"百度"}]},{"Name":"阿里","Users":[{"Name":"马云","Company":"阿里"}]},{"Name":"腾讯","Users":[{"Name":"马化腾","Company":"腾讯"}]},{"Name":"京东","Users":[{"Name":"刘强东","Company":"京东"}]}]}
+```
+
+人员委派
+
+```
+$ curl -X POST -d '{"name": "李彦宏", "company": "阿里"}' localhost:10000/user/dispatch
+{}
+$ curl -X POST -d '{}' localhost:10000/user/list
+{"List":[{"Name":"李彦宏","Company":"阿里"},{"Name":"马云","Company":"阿里"},{"Name":"马化腾","Company":"腾讯"}]}
+$ curl -X POST -d '{}' localhost:10000/department/list
+{"List":[{"Name":"百度"},{"Name":"阿里","Users":[{"Name":"马云","Company":"阿里"},{"Name":"李彦宏","Company":"阿里"}]},{"Name":"腾讯","Users":[{"Name":"马化腾","Company":"腾讯"}]}]}```
+```
+
+`main.go`入口程序其实是微服务架构中的网关API服务, 在两个微服务中, 我们启动了grpc接口, 又注册了http路由, 由`main.go`接受用户访问, 然后分发.

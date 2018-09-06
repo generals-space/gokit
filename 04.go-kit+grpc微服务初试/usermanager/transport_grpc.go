@@ -12,22 +12,22 @@ import (
 
 // UManagerServiceServer ...
 type UManagerServiceServer struct {
-	GetUserHandler  transport_grpc.Handler
+	ListHandler  transport_grpc.Handler
 	AddUserHandler  transport_grpc.Handler
 	DispatchHandler transport_grpc.Handler
 }
 
-// GetUser ...
-func (server *UManagerServiceServer) GetUser(ctx context.Context, req *common.GetUserRequest) (res *common.GetUserResponse, err error) {
-	_, rsp, err := server.GetUserHandler.ServeGRPC(ctx, req)
+// List ...
+func (server *UManagerServiceServer) List(ctx context.Context, req *common.Empty) (res *common.UserList, err error) {
+	_, rsp, err := server.ListHandler.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return rsp.(*common.GetUserResponse), nil
+	return rsp.(*common.UserList), nil
 }
 
 // AddUser ...
-func (server *UManagerServiceServer) AddUser(ctx context.Context, req *common.AddUserRequest) (res *common.Empty, err error) {
+func (server *UManagerServiceServer) AddUser(ctx context.Context, req *common.UserList) (res *common.Empty, err error) {
 	_, rsp, err := server.AddUserHandler.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
@@ -54,9 +54,10 @@ func encodeGrpcResponse(_ context.Context, req interface{}) (interface{}, error)
 
 // NewGrpcServer ...
 func NewGrpcServer(service *UserManager) *UManagerServiceServer {
-	log.Println("starting user manager http transport...")
-	GetUserHandler := transport_grpc.NewServer(
-		makeGetUserEndpoint(service),
+	log.Println("starting user manager grpc transport...")
+
+	ListHandler := transport_grpc.NewServer(
+		makeListEndpoint(service),
 		decodeGrpcRequest,
 		encodeGrpcResponse,
 	)
@@ -72,7 +73,7 @@ func NewGrpcServer(service *UserManager) *UManagerServiceServer {
 	)
 
 	return &UManagerServiceServer{
-		GetUserHandler:  GetUserHandler,
+		ListHandler:  ListHandler,
 		AddUserHandler:  AddUserHandler,
 		DispatchHandler: DispatchHandler,
 	}

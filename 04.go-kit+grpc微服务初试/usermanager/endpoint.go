@@ -10,24 +10,25 @@ import (
 // Endpoint类型要求参数和返回值必须为interface类型, 而不能是具体类型.
 // 所以makeXXXEndpoint只能返回如下的函数对象
 
-func makeAddUserEndpoint(srv *UserManager) endpoint.Endpoint {
+func makeListEndpoint(srv *UserManager) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(*common.AddUserRequest)
-		return &common.Empty{}, srv.AddUser(req.Name, req.Company)
-	}
-}
-
-func makeGetUserEndpoint(srv *UserManager) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(*common.GetUserRequest)
-		user, err := srv.GetUser(req.Name)
+		// req := request.(*common.Empty)
+		users, err := srv.List()
 		if err != nil {
 			return nil, err
 		}
-		return &common.GetUserResponse{
-			Name:    user.Name,
-			Company: user.Company,
-		}, nil
+		response := &common.UserList{}
+		for _, user := range users {
+			response.List = append(response.List, user)
+		}
+		return response, nil
+	}
+}
+
+func makeAddUserEndpoint(srv *UserManager) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(*common.UserList)
+		return &common.Empty{}, srv.AddUser(req)
 	}
 }
 

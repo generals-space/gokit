@@ -8,28 +8,16 @@ message User{
     string Name = 1;
     string Company = 2;
 }
-message GetUserRequest{
-    string Name = 1;
+message UserList{
+    repeated User List = 1;
 }
-
-message GetUserResponse{
-    string Name = 1;
-    string Company = 3;
-}
-
-message AddUserRequest{
-    string Name = 1;
-    string Company = 2;
-}
-
 message DispatchRequest{
     string Name = 1;
     string Company = 2;
 }
-
 service UserManagerService{
-    rpc GetUser (GetUserRequest) returns (GetUserResponse);
-    rpc AddUser (AddUserRequest) returns (Empty);
+    rpc List(Empty) returns(UserList);
+    rpc AddUser (UserList) returns (Empty);
     rpc Dispatch (DispatchRequest) returns (Empty);
 }
 
@@ -41,7 +29,12 @@ message Department{
 message DepartmentList{
     repeated Department List = 1;
 }
+message PersonnelChangeRequest{
+    User User = 1;
+    string Company = 2;
+}
 service DepartmentManagerService{
     rpc List(Empty) returns(DepartmentList);
     rpc Create(Department) returns(Empty);
+    rpc PersonnelChange(PersonnelChangeRequest) returns(Empty);
 }

@@ -28,3 +28,10 @@ func makeCreateEndpoint(srv *DepartmentManager) endpoint.Endpoint {
 		return &common.Empty{}, srv.Create(req)
 	}
 }
+
+func makePersonnelChangeEndpoint(srv *DepartmentManager) endpoint.Endpoint{
+	return func(ctx context.Context, request interface{})(interface{}, error){
+		req := request.(*common.PersonnelChangeRequest)
+		return &common.Empty{}, srv.PersonnelChange(req.User, req.Company)
+	}
+}

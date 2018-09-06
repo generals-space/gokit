@@ -33,7 +33,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{0}
+	return fileDescriptor_struct_14940efc5789c3fe, []int{0}
 }
 func (m *Empty) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Empty.Unmarshal(m, b)
@@ -66,7 +66,7 @@ func (m *User) Reset()         { *m = User{} }
 func (m *User) String() string { return proto.CompactTextString(m) }
 func (*User) ProtoMessage()    {}
 func (*User) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{1}
+	return fileDescriptor_struct_14940efc5789c3fe, []int{1}
 }
 func (m *User) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_User.Unmarshal(m, b)
@@ -100,134 +100,42 @@ func (m *User) GetCompany() string {
 	return ""
 }
 
-type GetUserRequest struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+type UserList struct {
+	List                 []*User  `protobuf:"bytes,1,rep,name=List,proto3" json:"List,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetUserRequest) Reset()         { *m = GetUserRequest{} }
-func (m *GetUserRequest) String() string { return proto.CompactTextString(m) }
-func (*GetUserRequest) ProtoMessage()    {}
-func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{2}
+func (m *UserList) Reset()         { *m = UserList{} }
+func (m *UserList) String() string { return proto.CompactTextString(m) }
+func (*UserList) ProtoMessage()    {}
+func (*UserList) Descriptor() ([]byte, []int) {
+	return fileDescriptor_struct_14940efc5789c3fe, []int{2}
 }
-func (m *GetUserRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetUserRequest.Unmarshal(m, b)
+func (m *UserList) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UserList.Unmarshal(m, b)
 }
-func (m *GetUserRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetUserRequest.Marshal(b, m, deterministic)
+func (m *UserList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UserList.Marshal(b, m, deterministic)
 }
-func (dst *GetUserRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetUserRequest.Merge(dst, src)
+func (dst *UserList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UserList.Merge(dst, src)
 }
-func (m *GetUserRequest) XXX_Size() int {
-	return xxx_messageInfo_GetUserRequest.Size(m)
+func (m *UserList) XXX_Size() int {
+	return xxx_messageInfo_UserList.Size(m)
 }
-func (m *GetUserRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetUserRequest.DiscardUnknown(m)
+func (m *UserList) XXX_DiscardUnknown() {
+	xxx_messageInfo_UserList.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetUserRequest proto.InternalMessageInfo
+var xxx_messageInfo_UserList proto.InternalMessageInfo
 
-func (m *GetUserRequest) GetName() string {
+func (m *UserList) GetList() []*User {
 	if m != nil {
-		return m.Name
+		return m.List
 	}
-	return ""
-}
-
-type GetUserResponse struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	Company              string   `protobuf:"bytes,3,opt,name=Company,proto3" json:"Company,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetUserResponse) Reset()         { *m = GetUserResponse{} }
-func (m *GetUserResponse) String() string { return proto.CompactTextString(m) }
-func (*GetUserResponse) ProtoMessage()    {}
-func (*GetUserResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{3}
-}
-func (m *GetUserResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetUserResponse.Unmarshal(m, b)
-}
-func (m *GetUserResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetUserResponse.Marshal(b, m, deterministic)
-}
-func (dst *GetUserResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetUserResponse.Merge(dst, src)
-}
-func (m *GetUserResponse) XXX_Size() int {
-	return xxx_messageInfo_GetUserResponse.Size(m)
-}
-func (m *GetUserResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetUserResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetUserResponse proto.InternalMessageInfo
-
-func (m *GetUserResponse) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *GetUserResponse) GetCompany() string {
-	if m != nil {
-		return m.Company
-	}
-	return ""
-}
-
-type AddUserRequest struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	Company              string   `protobuf:"bytes,2,opt,name=Company,proto3" json:"Company,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *AddUserRequest) Reset()         { *m = AddUserRequest{} }
-func (m *AddUserRequest) String() string { return proto.CompactTextString(m) }
-func (*AddUserRequest) ProtoMessage()    {}
-func (*AddUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{4}
-}
-func (m *AddUserRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_AddUserRequest.Unmarshal(m, b)
-}
-func (m *AddUserRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_AddUserRequest.Marshal(b, m, deterministic)
-}
-func (dst *AddUserRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_AddUserRequest.Merge(dst, src)
-}
-func (m *AddUserRequest) XXX_Size() int {
-	return xxx_messageInfo_AddUserRequest.Size(m)
-}
-func (m *AddUserRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_AddUserRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_AddUserRequest proto.InternalMessageInfo
-
-func (m *AddUserRequest) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *AddUserRequest) GetCompany() string {
-	if m != nil {
-		return m.Company
-	}
-	return ""
+	return nil
 }
 
 type DispatchRequest struct {
@@ -242,7 +150,7 @@ func (m *DispatchRequest) Reset()         { *m = DispatchRequest{} }
 func (m *DispatchRequest) String() string { return proto.CompactTextString(m) }
 func (*DispatchRequest) ProtoMessage()    {}
 func (*DispatchRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{5}
+	return fileDescriptor_struct_14940efc5789c3fe, []int{3}
 }
 func (m *DispatchRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DispatchRequest.Unmarshal(m, b)
@@ -289,7 +197,7 @@ func (m *Department) Reset()         { *m = Department{} }
 func (m *Department) String() string { return proto.CompactTextString(m) }
 func (*Department) ProtoMessage()    {}
 func (*Department) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{6}
+	return fileDescriptor_struct_14940efc5789c3fe, []int{4}
 }
 func (m *Department) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Department.Unmarshal(m, b)
@@ -334,7 +242,7 @@ func (m *DepartmentList) Reset()         { *m = DepartmentList{} }
 func (m *DepartmentList) String() string { return proto.CompactTextString(m) }
 func (*DepartmentList) ProtoMessage()    {}
 func (*DepartmentList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_struct_7ce65557ad4187aa, []int{7}
+	return fileDescriptor_struct_14940efc5789c3fe, []int{5}
 }
 func (m *DepartmentList) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DepartmentList.Unmarshal(m, b)
@@ -361,15 +269,60 @@ func (m *DepartmentList) GetList() []*Department {
 	return nil
 }
 
+type PersonnelChangeRequest struct {
+	User                 *User    `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
+	Company              string   `protobuf:"bytes,2,opt,name=Company,proto3" json:"Company,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PersonnelChangeRequest) Reset()         { *m = PersonnelChangeRequest{} }
+func (m *PersonnelChangeRequest) String() string { return proto.CompactTextString(m) }
+func (*PersonnelChangeRequest) ProtoMessage()    {}
+func (*PersonnelChangeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_struct_14940efc5789c3fe, []int{6}
+}
+func (m *PersonnelChangeRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PersonnelChangeRequest.Unmarshal(m, b)
+}
+func (m *PersonnelChangeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PersonnelChangeRequest.Marshal(b, m, deterministic)
+}
+func (dst *PersonnelChangeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PersonnelChangeRequest.Merge(dst, src)
+}
+func (m *PersonnelChangeRequest) XXX_Size() int {
+	return xxx_messageInfo_PersonnelChangeRequest.Size(m)
+}
+func (m *PersonnelChangeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PersonnelChangeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PersonnelChangeRequest proto.InternalMessageInfo
+
+func (m *PersonnelChangeRequest) GetUser() *User {
+	if m != nil {
+		return m.User
+	}
+	return nil
+}
+
+func (m *PersonnelChangeRequest) GetCompany() string {
+	if m != nil {
+		return m.Company
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Empty)(nil), "common.Empty")
 	proto.RegisterType((*User)(nil), "common.User")
-	proto.RegisterType((*GetUserRequest)(nil), "common.GetUserRequest")
-	proto.RegisterType((*GetUserResponse)(nil), "common.GetUserResponse")
-	proto.RegisterType((*AddUserRequest)(nil), "common.AddUserRequest")
+	proto.RegisterType((*UserList)(nil), "common.UserList")
 	proto.RegisterType((*DispatchRequest)(nil), "common.DispatchRequest")
 	proto.RegisterType((*Department)(nil), "common.Department")
 	proto.RegisterType((*DepartmentList)(nil), "common.DepartmentList")
+	proto.RegisterType((*PersonnelChangeRequest)(nil), "common.PersonnelChangeRequest")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -384,8 +337,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type UserManagerServiceClient interface {
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
-	AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*Empty, error)
+	List(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserList, error)
+	AddUser(ctx context.Context, in *UserList, opts ...grpc.CallOption) (*Empty, error)
 	Dispatch(ctx context.Context, in *DispatchRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
@@ -397,16 +350,16 @@ func NewUserManagerServiceClient(cc *grpc.ClientConn) UserManagerServiceClient {
 	return &userManagerServiceClient{cc}
 }
 
-func (c *userManagerServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
-	out := new(GetUserResponse)
-	err := c.cc.Invoke(ctx, "/common.UserManagerService/GetUser", in, out, opts...)
+func (c *userManagerServiceClient) List(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserList, error) {
+	out := new(UserList)
+	err := c.cc.Invoke(ctx, "/common.UserManagerService/List", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userManagerServiceClient) AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *userManagerServiceClient) AddUser(ctx context.Context, in *UserList, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/common.UserManagerService/AddUser", in, out, opts...)
 	if err != nil {
@@ -426,8 +379,8 @@ func (c *userManagerServiceClient) Dispatch(ctx context.Context, in *DispatchReq
 
 // UserManagerServiceServer is the server API for UserManagerService service.
 type UserManagerServiceServer interface {
-	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
-	AddUser(context.Context, *AddUserRequest) (*Empty, error)
+	List(context.Context, *Empty) (*UserList, error)
+	AddUser(context.Context, *UserList) (*Empty, error)
 	Dispatch(context.Context, *DispatchRequest) (*Empty, error)
 }
 
@@ -435,26 +388,26 @@ func RegisterUserManagerServiceServer(s *grpc.Server, srv UserManagerServiceServ
 	s.RegisterService(&_UserManagerService_serviceDesc, srv)
 }
 
-func _UserManagerService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserRequest)
+func _UserManagerService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserManagerServiceServer).GetUser(ctx, in)
+		return srv.(UserManagerServiceServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/common.UserManagerService/GetUser",
+		FullMethod: "/common.UserManagerService/List",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserManagerServiceServer).GetUser(ctx, req.(*GetUserRequest))
+		return srv.(UserManagerServiceServer).List(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserManagerService_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddUserRequest)
+	in := new(UserList)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -466,7 +419,7 @@ func _UserManagerService_AddUser_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/common.UserManagerService/AddUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserManagerServiceServer).AddUser(ctx, req.(*AddUserRequest))
+		return srv.(UserManagerServiceServer).AddUser(ctx, req.(*UserList))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -494,8 +447,8 @@ var _UserManagerService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserManagerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetUser",
-			Handler:    _UserManagerService_GetUser_Handler,
+			MethodName: "List",
+			Handler:    _UserManagerService_List_Handler,
 		},
 		{
 			MethodName: "AddUser",
@@ -516,6 +469,7 @@ var _UserManagerService_serviceDesc = grpc.ServiceDesc{
 type DepartmentManagerServiceClient interface {
 	List(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DepartmentList, error)
 	Create(ctx context.Context, in *Department, opts ...grpc.CallOption) (*Empty, error)
+	PersonnelChange(ctx context.Context, in *PersonnelChangeRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type departmentManagerServiceClient struct {
@@ -544,10 +498,20 @@ func (c *departmentManagerServiceClient) Create(ctx context.Context, in *Departm
 	return out, nil
 }
 
+func (c *departmentManagerServiceClient) PersonnelChange(ctx context.Context, in *PersonnelChangeRequest, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/common.DepartmentManagerService/PersonnelChange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DepartmentManagerServiceServer is the server API for DepartmentManagerService service.
 type DepartmentManagerServiceServer interface {
 	List(context.Context, *Empty) (*DepartmentList, error)
 	Create(context.Context, *Department) (*Empty, error)
+	PersonnelChange(context.Context, *PersonnelChangeRequest) (*Empty, error)
 }
 
 func RegisterDepartmentManagerServiceServer(s *grpc.Server, srv DepartmentManagerServiceServer) {
@@ -590,6 +554,24 @@ func _DepartmentManagerService_Create_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DepartmentManagerService_PersonnelChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonnelChangeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DepartmentManagerServiceServer).PersonnelChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/common.DepartmentManagerService/PersonnelChange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DepartmentManagerServiceServer).PersonnelChange(ctx, req.(*PersonnelChangeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _DepartmentManagerService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "common.DepartmentManagerService",
 	HandlerType: (*DepartmentManagerServiceServer)(nil),
@@ -602,34 +584,39 @@ var _DepartmentManagerService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "Create",
 			Handler:    _DepartmentManagerService_Create_Handler,
 		},
+		{
+			MethodName: "PersonnelChange",
+			Handler:    _DepartmentManagerService_PersonnelChange_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "struct.proto",
 }
 
-func init() { proto.RegisterFile("struct.proto", fileDescriptor_struct_7ce65557ad4187aa) }
+func init() { proto.RegisterFile("struct.proto", fileDescriptor_struct_14940efc5789c3fe) }
 
-var fileDescriptor_struct_7ce65557ad4187aa = []byte{
-	// 325 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0xcf, 0x4a, 0x33, 0x31,
-	0x10, 0xc0, 0xd9, 0xfe, 0xdb, 0xef, 0x1b, 0x6b, 0x0b, 0x73, 0xa8, 0xa1, 0xa7, 0x12, 0x44, 0x0a,
-	0x62, 0x91, 0xd5, 0x83, 0x78, 0xb0, 0x48, 0x2b, 0x5e, 0xd4, 0x43, 0xc5, 0x07, 0x88, 0xdb, 0x41,
-	0x7b, 0xc8, 0x26, 0x26, 0x69, 0xa1, 0x2f, 0xe6, 0xf3, 0xc9, 0xa6, 0xdd, 0x2e, 0xbb, 0x5d, 0x2c,
-	0x78, 0xda, 0xcd, 0x64, 0x7e, 0x33, 0x93, 0x5f, 0x02, 0x6d, 0xeb, 0xcc, 0x32, 0x76, 0x23, 0x6d,
-	0x94, 0x53, 0xd8, 0x8a, 0x95, 0x94, 0x2a, 0xe1, 0x21, 0x34, 0x1f, 0xa4, 0x76, 0x6b, 0x7e, 0x0d,
-	0x8d, 0x37, 0x4b, 0x06, 0x11, 0x1a, 0x2f, 0x42, 0x12, 0x0b, 0x06, 0xc1, 0xf0, 0xff, 0xcc, 0xff,
-	0x23, 0x83, 0x70, 0xa2, 0xa4, 0x16, 0xc9, 0x9a, 0xd5, 0x7c, 0x38, 0x5b, 0xf2, 0x53, 0xe8, 0x3c,
-	0x92, 0x4b, 0xc1, 0x19, 0x7d, 0x2d, 0xc9, 0xba, 0x2a, 0x9e, 0x8f, 0xa1, 0xbb, 0xcb, 0xb2, 0x5a,
-	0x25, 0x96, 0x0e, 0xb5, 0xa9, 0x17, 0xdb, 0xdc, 0x41, 0xe7, 0x7e, 0x3e, 0x3f, 0xd0, 0xe6, 0x97,
-	0x31, 0xc7, 0xd0, 0x9d, 0x2e, 0xac, 0x16, 0x2e, 0xfe, 0xfc, 0x5b, 0x81, 0x29, 0xc0, 0x94, 0xb4,
-	0x30, 0x4e, 0x52, 0x52, 0xcd, 0x72, 0x68, 0xa6, 0xf3, 0x59, 0x56, 0x1b, 0xd4, 0x87, 0x47, 0x51,
-	0x7b, 0xb4, 0x11, 0x3c, 0xf2, 0x43, 0x6f, 0xb6, 0xf8, 0x0d, 0x74, 0xf2, 0x2a, 0x4f, 0x0b, 0xeb,
-	0xf0, 0x0c, 0x1a, 0xe9, 0x97, 0x05, 0x1e, 0xc2, 0x0c, 0xca, 0xb3, 0x66, 0x7e, 0x3f, 0xfa, 0x0e,
-	0x00, 0xd3, 0x1a, 0xcf, 0x22, 0x11, 0x1f, 0x64, 0x5e, 0xc9, 0xac, 0x16, 0x31, 0xe1, 0x2d, 0x84,
-	0x5b, 0xb1, 0xd8, 0xcb, 0xd8, 0xe2, 0x7d, 0xf4, 0x4f, 0xf6, 0xe2, 0xdb, 0x1b, 0xb8, 0x84, 0x70,
-	0xeb, 0x34, 0x67, 0x8b, 0x92, 0xfb, 0xc7, 0x59, 0xdc, 0x3f, 0x11, 0x8c, 0xe0, 0x5f, 0x66, 0x11,
-	0x77, 0x65, 0x4b, 0x5e, 0x4b, 0x4c, 0xb4, 0x02, 0x96, 0x1f, 0xa6, 0x34, 0xfd, 0xc5, 0xe6, 0xf0,
-	0x58, 0x44, 0xfa, 0xbd, 0x7d, 0x0b, 0x3e, 0xed, 0x1c, 0x5a, 0x13, 0x43, 0xc2, 0x11, 0x56, 0x78,
-	0x2a, 0xf5, 0x7d, 0x6f, 0xf9, 0x67, 0x7e, 0xf5, 0x13, 0x00, 0x00, 0xff, 0xff, 0x3b, 0x82, 0xb6,
-	0xab, 0xf6, 0x02, 0x00, 0x00,
+var fileDescriptor_struct_14940efc5789c3fe = []byte{
+	// 337 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x52, 0xcb, 0x4e, 0xc3, 0x30,
+	0x10, 0x54, 0x4a, 0x5f, 0x2c, 0x85, 0xa2, 0x3d, 0x94, 0xa8, 0x07, 0x14, 0xf9, 0x00, 0x15, 0x8f,
+	0x1e, 0x02, 0x07, 0x6e, 0x80, 0x5a, 0x6e, 0x80, 0x50, 0x81, 0x0f, 0x30, 0xe9, 0xaa, 0xad, 0x84,
+	0xed, 0x60, 0xbb, 0x48, 0xfd, 0x18, 0xfe, 0x83, 0xcf, 0x43, 0x71, 0x30, 0xa5, 0x69, 0x38, 0x70,
+	0x4a, 0xec, 0x9d, 0xd9, 0x9d, 0x99, 0x35, 0xb4, 0x8c, 0xd5, 0xf3, 0xc4, 0xf6, 0x53, 0xad, 0xac,
+	0xc2, 0x7a, 0xa2, 0x84, 0x50, 0x92, 0x35, 0xa0, 0x76, 0x23, 0x52, 0xbb, 0x60, 0xe7, 0x50, 0x7d,
+	0x36, 0xa4, 0x11, 0xa1, 0x7a, 0xcf, 0x05, 0x85, 0x41, 0x14, 0xf4, 0x36, 0x47, 0xee, 0x1f, 0x43,
+	0x68, 0x0c, 0x94, 0x48, 0xb9, 0x5c, 0x84, 0x15, 0x77, 0xed, 0x8f, 0xec, 0x04, 0x9a, 0x19, 0xeb,
+	0x76, 0x66, 0x2c, 0x46, 0x50, 0xcd, 0xbe, 0x61, 0x10, 0x6d, 0xf4, 0xb6, 0xe2, 0x56, 0x3f, 0x9f,
+	0xd0, 0xcf, 0xea, 0x23, 0x57, 0x61, 0x97, 0xd0, 0x1e, 0xce, 0x4c, 0xca, 0x6d, 0x32, 0x1d, 0xd1,
+	0xdb, 0x9c, 0x8c, 0xfd, 0xe7, 0xb8, 0x21, 0xc0, 0x90, 0x52, 0xae, 0xad, 0x20, 0x59, 0xce, 0x65,
+	0x50, 0xcb, 0x06, 0x9a, 0xb0, 0x52, 0xa2, 0x22, 0x2f, 0xb1, 0x0b, 0xd8, 0x59, 0x76, 0x71, 0xd2,
+	0x0f, 0x56, 0xa4, 0xa3, 0x27, 0x2d, 0x51, 0xdf, 0x06, 0x9e, 0xa0, 0xf3, 0x40, 0xda, 0x28, 0x29,
+	0xe9, 0x75, 0x30, 0xe5, 0x72, 0x42, 0xde, 0x47, 0x94, 0xc7, 0xe7, 0xb4, 0xac, 0x99, 0x77, 0xc1,
+	0xfe, 0xe9, 0x2a, 0xfe, 0x08, 0x00, 0x33, 0xc8, 0x1d, 0x97, 0x7c, 0x42, 0xfa, 0x91, 0xf4, 0xfb,
+	0x2c, 0x21, 0x3c, 0xcc, 0x45, 0xe1, 0xb6, 0x6f, 0xe6, 0x16, 0xd5, 0xdd, 0xfd, 0xdd, 0xdb, 0x01,
+	0x8e, 0xa0, 0x71, 0x3d, 0x1e, 0xbb, 0x21, 0x6b, 0xc5, 0xee, 0x2a, 0x1b, 0x63, 0x68, 0xfa, 0x15,
+	0xe0, 0xde, 0x8f, 0xcf, 0xd5, 0xa5, 0x14, 0x38, 0xf1, 0x67, 0x00, 0xe1, 0x32, 0x8a, 0x82, 0xca,
+	0xd3, 0x72, 0x95, 0x9d, 0xf5, 0x0c, 0x1d, 0xec, 0x18, 0xea, 0x03, 0x4d, 0xdc, 0x12, 0x96, 0xa4,
+	0x5c, 0x14, 0x7b, 0x05, 0xed, 0x42, 0xdc, 0xb8, 0xef, 0x11, 0xe5, 0x7b, 0x28, 0x74, 0x78, 0xa9,
+	0xbb, 0xd7, 0x7e, 0xf6, 0x15, 0x00, 0x00, 0xff, 0xff, 0x6d, 0x1c, 0x0c, 0xb7, 0xfd, 0x02, 0x00,
+	0x00,
 }

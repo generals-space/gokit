@@ -15,6 +15,7 @@ import (
 type DManagerServiceServer struct {
 	CreateHandler transport_grpc.Handler
 	ListHandler   transport_grpc.Handler
+	PersonnelChangeHandler transport_grpc.Handler
 }
 
 // List ...
@@ -29,6 +30,15 @@ func (server *DManagerServiceServer) List(ctx context.Context, req *common.Empty
 // Create ...
 func (server *DManagerServiceServer) Create(ctx context.Context, req *common.Department) (res *common.Empty, err error) {
 	_, resp, err := server.CreateHandler.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*common.Empty), nil
+}
+
+// PersonnelChange ...
+func (server *DManagerServiceServer) PersonnelChange(ctx context.Context, req *common.PersonnelChangeRequest)(res *common.Empty, err error){
+	_, resp, err := server.PersonnelChangeHandler.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -55,15 +65,21 @@ func NewGrpcServer(srv *DepartmentManager) *DManagerServiceServer {
 		decodeGrpcRequest,
 		encodeGrpcResponse,
 	)
+	personnelChangeHandler := transport_grpc.NewServer(
+		makePersonnelChangeEndpoint(srv),
+		decodeGrpcRequest,
+		encodeGrpcResponse,
+	)
 	return &DManagerServiceServer{
 		CreateHandler: createHandler,
 		ListHandler:   listHandler,
+		PersonnelChangeHandler: personnelChangeHandler,
 	}
 }
 
 // StartGrpcTransport ...
 func StartGrpcTransport(srv *DepartmentManager) {
-	log.Println("starting department manager http transport...")
+	log.Println("starting department manager grpc transport...")
 
 	lis, _ := net.Listen("tcp", common.DepartmentGrpcTransportAddr)
 	gprcServer := grpc.NewServer()

@@ -1,11 +1,11 @@
 package department
 
 import (
-	"log"
-	"net/http"
 	"context"
 	"encoding/json"
-	
+	"log"
+	"net/http"
+
 	transport_http "github.com/go-kit/kit/transport/http"
 
 	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
@@ -26,6 +26,8 @@ func encodeHTTPResponse(_ context.Context, w http.ResponseWriter, response inter
 
 // StartHTTPTransport ...
 func StartHTTPTransport(srv *DepartmentManager) {
+	log.Println("starting department manager http transport...")
+
 	listHandler := transport_http.NewServer(
 		makeListEndpoint(srv),
 		decodeHTTPRequest(&common.Empty{}),
@@ -36,8 +38,7 @@ func StartHTTPTransport(srv *DepartmentManager) {
 		decodeHTTPRequest(&common.Department{}),
 		encodeHTTPResponse,
 	)
-
 	http.Handle("/department/list", listHandler)
 	http.Handle("/department/create", createHandler)
-	log.Fatal(http.ListenAndServe(common.DepartmentHttpTransportAddr, nil))
+	// log.Fatal(http.ListenAndServe(common.DepartmentHttpTransportAddr, nil))
 }
