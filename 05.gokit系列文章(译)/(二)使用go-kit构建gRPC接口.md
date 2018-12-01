@@ -1,0 +1,519 @@
+# (二)使用go-kit构建gRPC接口
+
+原文链接
+
+1. [Micro-services Using Go-kit: gRPC endpoint](http://www.ru-rocker.com/2017/02/24/micro-services-using-go-kit-grpc-endpoint/)
+
+## 1. 概述
+
+在前一篇文章中, 我们讨论了如何用go创建微服务, 也讲述了使用go-kit作为微服务框架(其实是库)的方法. 两者相得益彰.
+
+在这篇文章中, 我将创建另一种形式的服务, 使用gRPC协议而不是restful格式作为通信接口.
+
+## 2. gRPC
+
+对于gRPC我将不过多介绍, 详细信息可以查询ta的官网[grpc.io](http://www.grpc.io/).
+
+gRPC是google支持的远程过程调用协议, gRPC客户端可以直接调用服务端提供的方法. 
+
+而且, gRPC默认使用[protocol buffers](https://developers.google.com/protocol-buffers/)作为序列化结构数据的机制, 相比与XML/JSON, 数据更小, 传输更快.
+
+## 3. 示例场景
+
+与上一篇文章的场景相同, 我们仍然创建一个生成随机文本的服务. 但是稍微有一些不同, 上一篇文章中在业务层有3个方法(`Word`, `Sentence`和`Paragraph`), 这一次我将只创建单个方法, 名为`Lorem`, 在方法内部根据`type`不同生成哪种文本, 单词, 句子, 还是段落.
+
+**一步一步来**
+
+在上一篇安装过依赖之后, 我们还需要安装一些其他的依赖库和`protocol buffer`工具.
+
+1. 点击[这里](https://github.com/google/protobuf/releases)下载`protocol buffer`编译工具, 解压, 然后把可执行文件放到环境变量中.
+
+```bash
+#PROTOC
+export PROTOC_HOME=~/opt/protoc-3.2.0-osx-x86_64
+export PATH=${PATH}:$PROTOC_HOME/bin/
+```
+
+2. 在终端执行如下命令
+
+```
+go get -u github.com/golang/protobuf/{proto,protoc-gen-go}
+```
+
+3. 记得把go可执行文件添加到环境变量
+
+```bash
+#GOPATH
+export GOPATH=~/workspace-golang/
+export GOBIN=$GOPATH/bin/
+export PATH=${PATH}:$GOBIN
+```
+
+然后在`gokit-playground`项目下再创建一个目录, 名为`lorem-grpc`, 作为此次服务的工程目录. 完全路径为`$GOPATH/github.com/ru-rocker/gokit-playground/lorem-grpc`. 这里我称之为工作目录.
+
+## 3.1 定义Proto数据
+
+我们用protocol buffer定义所需要的数据结构, 使用ta的第3个版本, 即`proto3`. 首先, 在工作目录下创建一个`pb`子目录, 在其下创建一个`lorem.proto`文件. 在这个文件中声明使用版本3的语法, 然后定义我们的服务和请求/响应的数据结构.
+
+这篇文章中, 服务名称为`Lorem`, 提供一个`Lorem`方法, 该方法接受`LoremRequest`作为参数, 并返回`LoremResponse`响应对象.
+
+```
+syntax = "proto3";
+package pb;
+
+service Lorem {
+    rpc Lorem(LoremRequest) returns (LoremResponse) {}
+}
+
+message LoremRequest {
+    string requestType = 1;
+    int32 min = 2;
+    int32 max = 3;
+}
+
+message LoremResponse {
+    string message = 1;
+    string err = 2;
+}
+```
+
+在protobuf语法中, `message`块中成员属性的定义应为如下格式
+
+```
+type name = index
+```
+
+`type`为字段类型, 比如`string`, `bool`, `double`, `float`, `int32`等.
+
+`index`为整型数值, ta表示了该字段在数据流中的位置.
+
+有了protocol buffer编译器和对应的golang版的插件, 我们将`.proto`文件编译成`.go`文件.
+
+在`pb`目录下执行
+
+```
+protoc lorem.proto --go_out=plugins=grpc:.
+```
+
+将会生成`lorem.pb.go`文件.
+
+### 3.2 定义服务
+
+与上一篇文章相同, 同样在工作目录下创建`service.go`文件, 然后创建`Lorem`方法.
+
+```go
+// 注意包名, golang不支持中横线的包名
+package lorem_grpc
+
+import (
+	gl "github.com/drhodes/golorem"
+	"strings"
+	"errors"
+	"context"
+)
+
+var (
+	ErrRequestTypeNotFound = errors.New("Request type only valid for word, sentence and paragraph")
+)
+
+// Define service interface
+type Service interface {
+	// generate a word with at least min letters and at most max letters.
+	Lorem(ctx context.Context, requestType string, min, max int) (string, error)
+}
+
+// Implement service with empty struct
+type LoremService struct {
+
+}
+
+// Implement service functions
+func (LoremService) Lorem(_ context.Context, requestType string, min, max int) (string, error) {
+	var result string
+	var err error
+	if strings.EqualFold(requestType, "Word") {
+		result = gl.Word(min, max)
+	} else if strings.EqualFold(requestType, "Sentence") {
+		result = gl.Sentence(min, max)
+	} else if strings.EqualFold(requestType, "Paragraph") {
+		result = gl.Paragraph(min, max)
+	} else {
+		err = ErrRequestTypeNotFound
+	}
+	return result, err
+}
+```
+
+### 3.3 创建Endpoints
+
+endpoint部分倒是没什么大的差别. 你只需要注意, 这里我们定义了`Endpoints`结构体, ta也实现了业务层的`Service`接口, 因为在创建gRPC客户端连接时需要用这样的机制(译者注: 看到client部分就会知道, 一个客户端连接对象就是`Endpoints`对象, 可以直接调用`Endpoints`中的方法).
+
+```go
+package lorem_grpc
+
+import (
+	"github.com/go-kit/kit/endpoint"
+	"context"
+	"errors"
+)
+
+type LoremRequest struct {
+	RequestType string
+	Min         int32
+	Max         int32
+}
+
+type LoremResponse struct {
+	Message string `json:"message"`
+	Err     string `json:"err,omitempty"`
+}
+
+// 这里仍是传统的MakeXXXEndpoint函数
+func MakeLoremEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(LoremRequest)
+
+		var (
+			min, max int
+		)
+
+		min = int(req.Min)
+		max = int(req.Max)
+		txt, err := svc.Lorem(ctx, req.RequestType, min, max)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return LoremResponse{Message: txt}, nil
+	}
+
+}
+
+type Endpoints struct {
+	LoremEndpoint endpoint.Endpoint
+}
+
+// 这里Endpoints也实现了业务层的`Service`接口, 之后将由grpc client直接调用
+// 译者注: 其实这里已经不算是endpoint部分了, 而是类似于示例04的transport部分的handler, 
+// 把不同的grpc请求都交给内部的handler, 调用业务层对象完成逻辑.
+func (e Endpoints) Lorem(ctx context.Context, requestType string, min, max int) (string, error) {
+	req := LoremRequest{
+		RequestType: requestType,
+		Min: int32(min),
+		Max: int32(max),
+	}
+	resp, err := e.LoremEndpoint(ctx, req)
+	if err != nil {
+		return "", err
+	}
+	loremResp := resp.(LoremResponse)
+	if loremResp.Err != "" {
+		return "", errors.New(loremResp.Err)
+	}
+	return loremResp.Message, nil
+}
+```
+
+### 3.4 规则请求与响应
+
+与上一篇文章一样, 我们依然需要`encode`/`decode`函数(将请求与响应在rpc接口和业务服务之间相互转换(因为rpc接口所需的参数和业务服务所需的参数不一定是相同的)). 为了实现这样的目的, 我们创建`model.go`文件, 内容如下
+
+```go
+package lorem_grpc
+
+import (
+	"context"
+	"github.com/ru-rocker/gokit-playground/lorem-grpc/pb"
+)
+
+//Encode and Decode Lorem Request
+func EncodeGRPCLoremRequest(_ context.Context, r interface{}) (interface{}, error) {
+	req := r.(LoremRequest)
+	return &pb.LoremRequest{
+		RequestType: req.RequestType,
+		Max: req.Max,
+		Min: req.Min,
+	} , nil
+}
+
+func DecodeGRPCLoremRequest(ctx context.Context, r interface{}) (interface{}, error) {
+	req := r.(*pb.LoremRequest)
+	return LoremRequest{
+		RequestType: req.RequestType,
+		Max: req.Max,
+		Min: req.Min,
+	}, nil
+}
+
+// Encode and Decode Lorem Response
+func EncodeGRPCLoremResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(LoremResponse)
+	return &pb.LoremResponse{
+		Message: resp.Message,
+		Err: resp.Err,
+	}, nil
+}
+
+func DecodeGRPCLoremResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(*pb.LoremResponse)
+	return LoremResponse{
+		Message: resp.Message,
+		Err: resp.Err,
+	}, nil
+}
+```
+
+> 译者注: 与上一篇文章不同, 也与我自己编写的go-kit代码不同, 这里对请求与响应同时有`encode`与`decode`方法, 因为这次的工程将转换变成了双向的. 客户端发送带传统参数的请求 -> 客户端转换成`protobuf`类型的参数 -> gRPC发送 -> 服务端接收protobuf请求 -> 转换成传统参数再调用业务服务 -> 将响应再次封装成`protobuf`类型 -> gRPC返回给客户端 -> 客户端将`protobuf`类型响应转换成常规类型.
+
+### 3.5 Transport
+
+在这一步, 我们需要实现`.proto`中定义的`service` -> `LoremServer`(译者注, `.proto`中定义的`service`名称为`Lorem`, 但是在使用gRPC在实现服务端时要创建`LoremServer`对象, 同样, 客户端需要的是`LoremClient`对象, 这是gRPC规定的). 然后用一个函数来实例化`grpcServer`.
+
+```go
+package lorem_grpc
+
+import (
+	"golang.org/x/net/context"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"github.com/ru-rocker/gokit-playground/lorem-grpc/pb"
+)
+
+type grpcServer struct {
+	lorem grpctransport.Handler
+}
+
+// implement LoremServer Interface in lorem.pb.go
+func (s *grpcServer) Lorem(ctx context.Context, r *pb.LoremRequest) (*pb.LoremResponse, error) {
+	_, resp, err := s.lorem.ServeGRPC(ctx, r)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.LoremResponse), nil
+}
+
+// create new grpc server
+func NewGRPCServer(_ context.Context, endpoint Endpoints) pb.LoremServer {
+	return &grpcServer{
+		lorem: grpctransport.NewServer(
+			endpoint.LoremEndpoint,
+			DecodeGRPCLoremRequest,
+			EncodeGRPCLoremResponse,
+		),
+	}
+}
+```
+
+### 3.6 Server服务端
+
+在golang中, 创建gRPC服务就和创建http服务一样简单. 唯一的不同就是从http协议变成了tcp协议. 在工作目录下, 创建一个`server`子目录, 然后创建`server_grpc_main.go`文件, 内容如下
+
+```go
+package main
+
+import (
+	"net"
+	"flag"
+	"github.com/ru-rocker/gokit-playground/lorem-grpc"
+	context "golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"github.com/ru-rocker/gokit-playground/lorem-grpc/pb"
+	"os"
+	"os/signal"
+	"syscall"
+	"fmt"
+)
+
+func main() {
+
+	var (
+		gRPCAddr = flag.String("grpc", ":8081",
+			"gRPC listen address")
+	)
+	flag.Parse()
+	ctx := context.Background()
+
+	// init lorem service
+	var svc lorem_grpc.Service
+	svc = lorem_grpc.LoremService{}
+	errChan := make(chan error)
+
+	// creating Endpoints struct
+	// 译者注: 其实就是另一种形式的路由-控制器映射
+	endpoints := lorem_grpc.Endpoints{
+		LoremEndpoint: lorem_grpc.MakeLoremEndpoint(svc),
+	}
+
+	go func() {
+		listener, err := net.Listen("tcp", *gRPCAddr)
+		if err != nil {
+			errChan <- err
+			return
+		}
+		handler := lorem_grpc.NewGRPCServer(ctx, endpoints)
+		gRPCServer := grpc.NewServer()
+		pb.RegisterLoremServer(gRPCServer, handler)
+		errChan <- gRPCServer.Serve(listener)
+	}()
+
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		errChan <- fmt.Errorf("%s", <-c)
+	}()
+
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		errChan <- fmt.Errorf("%s", <-c)
+	}()
+	fmt.Println(<- errChan)
+}
+```
+
+### 3.7 Client客户端
+
+是时候编写客户端代码了. 我们只需要创建一个`New`函数即可, 返回`Service`对象(业务层定义的接口类型). go-kit库中`transport/grpc`提供一个`NewClient`函数, 可以将grpc客户端对象转换成`Endpoint`类型.
+
+在工作目录下创建`client`子目录, 并添加`client.go`, 内容如下
+
+```go
+package client
+
+import (
+	"github.com/ru-rocker/gokit-playground/lorem-grpc"
+	"github.com/ru-rocker/gokit-playground/lorem-grpc/pb"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"google.golang.org/grpc"
+)
+
+// Return new lorem_grpc service
+func New(conn *grpc.ClientConn) lorem_grpc.Service {
+	var loremEndpoint = grpctransport.NewClient(
+		conn, "Lorem", "Lorem",
+		lorem_grpc.EncodeGRPCLoremRequest,
+		lorem_grpc.DecodeGRPCLoremResponse,
+		pb.LoremResponse{},
+	).Endpoint()
+
+	return lorem_grpc.Endpoints{
+		LoremEndpoint:     loremEndpoint,
+	}
+}
+```
+
+注意: 这里`New()`返回了`lorem_grpc.Endpoints`对象(在3.3节的时候该对象实现了`Service`接口)).
+
+> 译者注: 我有点没搞懂, 如果业务层有多个方法时如何暴露给客户端调用? 是不是要在`Endpoints`结构中再添加其他的业务方法? 这样的话客户端在实例化`Endpoints`时就要通过一个grpc连接对象创建多个`Endpoint`了吧?
+
+接下来创建客户端的main入口程序, 在`client`目录下再创建`cmd`子目录, 并添加`client_grpc_main.go`, 内容如下
+
+```go
+package main
+
+import (
+	"flag"
+	"time"
+	"log"
+	grpcClient "github.com/ru-rocker/gokit-playground/lorem-grpc/client"
+	"google.golang.org/grpc"
+	"golang.org/x/net/context"
+	"github.com/ru-rocker/gokit-playground/lorem-grpc"
+	"fmt"
+	"strconv"
+)
+
+func main() {
+	var (
+		grpcAddr = flag.String("addr", ":8081",
+			"gRPC address")
+	)
+	flag.Parse()
+	ctx := context.Background()
+	conn, err := grpc.Dial(*grpcAddr, grpc.WithInsecure(),
+		grpc.WithTimeout(1*time.Second))
+
+	if err != nil {
+		log.Fatalln("gRPC dial:", err)
+	}
+	defer conn.Close()
+
+	loremService := grpcClient.New(conn)
+	args := flag.Args()
+	var cmd string
+	cmd, args = pop(args)
+
+	switch cmd {
+	case "lorem":
+		var requestType, minStr, maxStr string
+
+		requestType, args = pop(args)
+		minStr, args = pop(args)
+		maxStr, args = pop(args)
+
+		min, _ := strconv.Atoi(minStr)
+		max, _ := strconv.Atoi(maxStr)
+		lorem(ctx, loremService, requestType, min, max)
+	default:
+		log.Fatalln("unknown command", cmd)
+	}
+}
+
+// parse command line argument one by one
+func pop(s []string) (string, []string) {
+	if len(s) == 0 {
+		return "", s
+	}
+	return s[0], s[1:]
+}
+
+// call lorem service
+func lorem(ctx context.Context, service lorem_grpc.Service, requestType string, min int, max int) {
+	mesg, err := service.Lorem(ctx, requestType, min, max)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	fmt.Println(mesg)
+}
+```
+
+### 3.8 运行
+
+首先运行服务端程序
+
+```
+cd $GOPATH
+go run src/github.com/ru-rocker/gokit-playground/lorem-grpc/server/server_grpc_main.go
+```
+
+然后执行客户端主程序(需要传入参数)
+
+```
+cd $GOPATH
+go run src/github.com/ru-rocker/gokit-playground/lorem-grpc/client/cmd/main.go lorem sentence 10 20
+```
+
+输出如下
+
+```
+# sentence
+go run src/github.com/ru-rocker/gokit-playground/lorem-grpc/client/cmd/client_grpc_main.go lorem sentence 10 20
+Concurrunt nota re dicam fias, sim aut pecco, die appetitum.
+
+
+# word
+go run src/github.com/ru-rocker/gokit-playground/lorem-grpc/client/cmd/client_grpc_main.go lorem word 10 20
+difficultates
+
+# paragraph
+go run src/github.com/ru-rocker/gokit-playground/lorem-grpc/client/cmd/client_grpc_main.go lorem paragraph 10 20
+En igitur aequo tibi ita recedimus an aut eum tenacius quae mortalitatis eram aut rapit montium inaequaliter dulcedo aditum. Rerum tempus mala anima volebant dura quae o modis, fama vanescit fit. Nuntii comprehendet ponamus redducet cura sero prout, nonne respondi ipsa angelos comes, da ea saepe didici. Crebro te via hos adsit. Psalmi agam me mea pro da. Audi pati sim da ita praeire nescio faciant. Deserens da contexo e suaveolentiam qualibus subtrahatur excogitanda pusillus grex, e o recorder cor re libidine. Ore siderum ago mei, cura hi deo. Dicens ore curiosarum, filiorum eruuntur munerum displicens ita me repente formaeque agam nosti. Deo fama propterea ab persentiscere nam acceptam sed e a corruptione. Rogo ea nascendo qui, fuit ceterarumque. Drachmam ore operatores exemplo vivunt. Recolo hi fac cor secreta fama, domi, rogo somnis. Sapores fidei maneas saepe corporis re oris quantulum doleam te potu ita lux da facie aut. Benedicendo e tertium nosse agam ne amo, mole invenio dicturus me cognoscere ita aer se memor consulerem ab te rei. Miles ita amaritudo rogo hi flendae quietem invoco quae odor desuper tu. Temptatione dicturus ita mediator ita mundum lux partes miseros percepta seu dicant avaritiam nares contra deseri securus. Ea sobrios tale, rogo sanctis. Ita ne manu uspiam hierusalem, transeam dicite subduntur responsa cor socialiter fit deseri album praeditum.
+```
+
+## 4. 总结
+
+可以看到, 创建gRPC接口非常简单, 与rest接口只是稍微有一点不同. 但是gRPC比rest要快很多, 个人感觉gRPC在未来可能会代替JSON.
+
+> 译者注: 呵呵, 并不简单呢
+
+本文所用源码在[这里](https://github.com/ru-rocker/gokit-playground/tree/master/lorem-grpc)
