@@ -1,0 +1,137 @@
+# (三)go-kit日志功能
+
+原文链接
+
+1. [Micro-services Using go-kit: Logging Features](http://www.ru-rocker.com/2017/03/05/micro-services-using-go-kit-logging-features/)
+
+## 1. 为什么日志这么重要
+
+...这个我不想翻译.
+
+## 2. go-kit的日志功能
+
+go-kit有一个牛x的特性, 就是支持中间件. 其实中间件就是一个装饰器方法, 接受一个endpoint作为参数, 然后返回一个endpoint(在这之间执行一些操作). 使用这个特性, 我们可以在我们的应用中添加日志功能.
+
+## 3. 示例场景
+
+我还是比较钟爱我的随机文本服务...好吧其实是我懒得再搞一个示例了. 我们还是使用之前的工程, 对ta稍微进行下改造. 由于go-kit的这种即插即用的特性, 在一个已经存在的应用中添加日志记录会非常简单.
+
+在这次的工程中, 我将直接复制第一篇文章中的`lorem`目录, 并将其重命名为`lorem-logging`(源码中的import路径也要修改哦).
+
+### 3.1 修改`service.go`
+
+在`service.go`中添加一个新的类型, 命名为`ServiceMiddleware`. 这是一个函数的别名, 这种函数接受`Service`接口对象为参数, 然后返回一个`Service`接口对象. 这在主函数中进行对`Service`接口对象的链式调用相当有帮助.
+
+```go
+// create type that return function.
+// this will be needed in main.go
+type ServiceMiddleware func (Service) Service
+```
+
+### 3.2 实现日志功能
+
+创建`logging.go`文件, 在这个文件中, 我们创建一个名为`loggingMiddleware`的结构体类型. 这个类型拥有两个属性: `Service`, `Logger`.
+
+```go
+// Make a new type and wrap into Service interface
+// Add logger property to this type
+type loggingMiddleware struct {
+	Service
+	logger log.Logger
+}
+```
+
+然后创建一个返回`ServiceMiddleware`函数对象(3.1中提到的)的函数. 这个函数接受一个参数`logger`.
+
+```go
+// implement function to return ServiceMiddleware
+func LoggingMiddleware(logger log.Logger) ServiceMiddleware {
+	return func(next Service) Service {
+		return loggingMiddleware{next, logger}
+	}
+}
+```
+
+最后一步是实现`Service`接口. 我们要为接口中的每一个方法都打印一次方法名称, 参数值, 响应值以及函数执行耗时等信息.
+
+```go
+// Implement Service Interface for LoggingMiddleware
+func (mw loggingMiddleware) Word(min, max int) (output string) {
+	defer func(begin time.Time){
+		mw.logger.Log(
+			"function","Word",
+			"min", min,
+			"max", max,
+			"result", output,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+	output = mw.Service.Word(min,max)
+	return
+}
+
+// and the rest for sentence and paragraph
+```
+
+### 3.3 修改`main.go`
+
+完成日志功能后, 下一步就是把它写进`main.go`中.
+
+```go
+func main() {
+	ctx := context.Background()
+	errChan := make(chan error)
+
+	// Logging domain.
+	var logger log.Logger
+	{
+		logger = log.NewLogfmtLogger(os.Stderr)
+		logger = log.NewContext(logger).With("ts", log.DefaultTimestampUTC)
+		logger = log.NewContext(logger).With("caller", log.DefaultCaller)
+	}
+
+	var svc lorem_logging.Service
+    svc = lorem_logging.LoremService{}
+    // 主要是这一行 !!!
+    svc = lorem_logging.LoggingMiddleware(logger)(svc)
+    // svc的使用方法还和原来一样.
+	endpoint := lorem_logging.Endpoints{
+		LoremEndpoint: lorem_logging.MakeLoremLoggingEndpoint(svc),
+	}
+
+	r := lorem_logging.MakeHttpHandler(ctx, endpoint, logger)
+
+	// HTTP transport
+	go func() {
+		fmt.Println("Starting server at port 8080")
+		handler := r
+		errChan <- http.ListenAndServe(":8080", handler)
+	}()
+
+
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		errChan <- fmt.Errorf("%s", <-c)
+	}()
+	fmt.Println(<- errChan)
+}
+```
+
+### 3.4 运行
+
+运行方法和第一篇文章一样, 如果一切顺利的话, 在发起请求后, 服务端程序会有类似如下的输出
+
+```
+ts=2017-03-04T16:46:42Z caller=logging.go:31 function=Word min=10 max=10 result=exhibentur took=3.54µs
+ts=2017-03-04T16:46:49Z caller=logging.go:45 function=Sentence min=10 max=10 result="Cura ob pro qui tibi inveni dum qua fit donec." took=16.795µs
+ts=2017-03-04T16:46:59Z caller=logging.go:45 function=Sentence min=4 max=4 result="Mortalitatis hi ea ore." took=10.51µs
+```
+
+## 4. 总结
+
+这篇文章主要讲的就是使用go-kit提供的日志插件在原有的服务上添加日志输出的功能. 但是对于生产环境而言, 这仍然是不够的. 因为大量的日志数据对人工分析是一个难题. 所以, 在我看来, 仍然需要一款日志分析工具. 强烈推荐[ELK](https://www.elastic.co/webinars/introduction-elk-stack)技术栈来完成这样的工作.
+
+我想再写一篇文章来讲go-kit日志功能与ELK技术栈的集成使用. 不过搭建环境需要一点时间, 我正在找有没有Vagrant环境来完成. 希望在不久之后能完成这个.
+
+本文所用源码在[这里](https://github.com/ru-rocker/gokit-playground/tree/master/lorem-logging)
