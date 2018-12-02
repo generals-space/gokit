@@ -155,4 +155,3 @@ e = ratelimitkit.NewTokenBucketThrottler(rlbucket, time.Sleep)(e)
 ## 4. 参考
 
 Go Programming Blueprints – Second Edition by Mat Ryer
-;
