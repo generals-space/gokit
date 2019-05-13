@@ -23,9 +23,7 @@ type Service interface {
 type LoremService struct {
 }
 
-func (LoremService) Lorem(_ context.Context, requestType string, min, max int) (string, error) {
-	var result string
-	var err error
+func (LoremService) Lorem(_ context.Context, requestType string, min, max int) (result string, err error) {
 	if strings.EqualFold(requestType, "Word") {
 		result = golorem.Word(min, max)
 	} else if strings.EqualFold(requestType, "Sentence") {
@@ -35,5 +33,5 @@ func (LoremService) Lorem(_ context.Context, requestType string, min, max int) (
 	} else {
 		err = ErrRequestTypeNotFound
 	}
-	return result, err
+	return 
 }

@@ -3,13 +3,8 @@ package lorem_restful
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/go-kit/kit/endpoint"
-)
-
-var (
-	ErrRequestTypeNotFound = errors.New("Request type only valid for word, sentence and paragraph")
 )
 
 // LoremRequest ...
@@ -42,22 +37,13 @@ func MakeLoremEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoremRequest)
 
-		var (
-			txt      string
-			min, max int
-		)
+		min, max := int(req.Min), int(req.Max)
+		txt, err := svc.Lorem(req.RequestType, min, max)
 
-		min, max = req.Min, req.Max
-
-		if strings.EqualFold(req.RequestType, "Word") {
-			txt = svc.Word(min, max)
-		} else if strings.EqualFold(req.RequestType, "Sentence") {
-			txt = svc.Sentence(min, max)
-		} else if strings.EqualFold(req.RequestType, "Paragraph") {
-			txt = svc.Paragraph(min, max)
-		} else {
-			return nil, ErrRequestTypeNotFound
+		if err != nil {
+			return nil, err
 		}
+
 		// return LoremResponse{Message: txt}, nil
 		return LoremResponse{Message: txt}, errors.New("test error")
 	}
