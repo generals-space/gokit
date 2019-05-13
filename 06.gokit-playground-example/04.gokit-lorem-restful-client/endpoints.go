@@ -58,7 +58,24 @@ func MakeLoremEndpoint(svc Service) endpoint.Endpoint {
 		} else {
 			return nil, ErrRequestTypeNotFound
 		}
-		// return LoremResponse{Message: txt}, nil
-		return LoremResponse{Message: txt}, errors.New("test error")
+		return LoremResponse{Message: txt}, nil
 	}
+}
+
+// Lorem ...
+func (e Endpoints) Lorem(ctx context.Context, requestType string, min, max int) (string, error) {
+	req := LoremRequest{
+		RequestType: requestType,
+		Min:         min,
+		Max:         max,
+	}
+	resp, err := e.LoremEndpoint(ctx, req)
+	if err != nil {
+		return "", err
+	}
+	loremResp := resp.(LoremResponse)
+	if loremResp.Err != nil {
+		return "", errors.New(loremResp.Err.Error())
+	}
+	return loremResp.Message, nil
 }

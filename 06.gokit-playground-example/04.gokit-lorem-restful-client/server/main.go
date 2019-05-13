@@ -4,11 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
 
-	"github.com/go-kit/kit/log"
-
-	"github.com/generals-space/gokit/06.gokit-playground-example/03.gokit-lorem-restful-ServerErrorLogger"
+	"github.com/generals-space/gokit/06.gokit-playground-example/04.gokit-lorem-restful-client"
 )
 
 func main() {
@@ -20,16 +17,9 @@ func main() {
 		LoremEndpoint: lorem_restful.MakeLoremEndpoint(svc),
 	}
 
-	var logger log.Logger
-	{
-		logger = log.NewLogfmtLogger(os.Stderr)
-		logger = log.With(logger, "ts", log.DefaultTimestampUTC)
-		logger = log.With(logger, "caller", log.DefaultCaller)
-	}
-
 	ctx := context.Background()
 	// 将go-kit类型的endpoint接口转换成http标准库接口
-	handler := lorem_restful.MakeHTTPHandler(ctx, endpoints, logger)
+	handler := lorem_restful.MakeHTTPHandler(ctx, endpoints)
 
 	// 提供标准http服务
 	fmt.Println("Starting server at port 8080")

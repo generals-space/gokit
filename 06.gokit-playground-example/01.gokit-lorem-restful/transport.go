@@ -17,7 +17,7 @@ var (
 )
 
 // 解析url路径参数为endpoint接口所需的LoremRequest对象
-func decodeLoremRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	vars := mux.Vars(r)
 	requestType, ok := vars["type"]
 	if !ok {
@@ -53,7 +53,7 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 func MakeHTTPHandler(ctx context.Context, endpoint Endpoints) http.Handler {
 	handler := httptransport.NewServer(
 		endpoint.LoremEndpoint,
-		decodeLoremRequest,
+		decodeRequest,
 		encodeResponse,
 	)
 

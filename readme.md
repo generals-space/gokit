@@ -7,7 +7,10 @@
 3. [Micro-services Using Go-kit: REST Endpoint](http://www.ru-rocker.com/2017/02/17/micro-services-using-go-kit-http-endpoint/)
     - 系列文章
 
-go-kit的官方示例有点过度设计的感觉, 尤其是`领域驱动设计`的思想让人无法理解.
+4. [opencensus-gokit-example](https://github.com/basvanbeek/opencensus-gokit-example)
+    - 一个完整的项目, 涉及到go-kit的多种组件
+
+go-kit的官方示例有点过度设计的感觉, 尤其是`领域驱动设计`的思想让人难以理解.
 
 参考文章2中的示例简单一些, 而且条理更清晰, 但在设计上与我目前遇到的场景不匹配.
 

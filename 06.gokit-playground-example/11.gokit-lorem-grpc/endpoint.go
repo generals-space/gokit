@@ -29,6 +29,7 @@ type Endpoints struct {
 }
 
 // MakeLoremEndpoint 创建LoremEndpoint端点
+// 话说为什么endpoint不直接接受pb对象而是自定义request/response对象呢?
 func MakeLoremEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoremRequest)
