@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  lorem:
+    image: gokit-lorem-logging-01
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/01.gokit-lorem-logging
+    command: ["go", "run", "cmd/main.go"]

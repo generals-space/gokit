@@ -1,10 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
-
-	"golang.org/x/net/context"
 
 	"github.com/generals-space/gokit/06.gokit-playground-example/02.gokit-lorem-restful-ServerErrorEncoder"
 )
