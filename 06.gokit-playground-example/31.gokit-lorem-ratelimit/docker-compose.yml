@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  lorem:
+    image: gokit-lorem-ratelimit-01
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/31.gokit-lorem-ratelimit
+    command: ["go", "run", "cmd/main.go"]
