@@ -28,7 +28,7 @@ func MakeHTTPHandler(_ context.Context, endpoint Endpoints) http.Handler {
 	//GET /health
 	r.Methods("GET").Path("/health").Handler(httptransport.NewServer(
 		endpoint.HealthEndpoint,
-		decodeHealthRequest,
+		DecodeHealthRequest,
 		EncodeResponse,
 	))
 

@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// decode url path variables into request
+// DecodeLoremRequest ...
 func DecodeLoremRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	vars := mux.Vars(r)
 	requestType, ok := vars["type"]
@@ -38,19 +38,18 @@ func DecodeLoremRequest(_ context.Context, r *http.Request) (interface{}, error)
 	return request, nil
 }
 
-// decode health check
-func decodeHealthRequest(_ context.Context, _ *http.Request) (interface{}, error) {
+// DecodeHealthRequest ...
+func DecodeHealthRequest(_ context.Context, _ *http.Request) (interface{}, error) {
 	return HealthRequest{}, nil
 }
 
-// encodeResponse is the common method to encode all response types to the client.
+// EncodeResponse 这是一个通用方法, 将对象转换成json字符串就可以了, 不用在乎对象类型.
 func EncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
 }
 
-// Encode request form LoremRequest into existing Lorem Service
-// The encode will translate the LoremRequest into /lorem/{requestType}/{min}/{max}
+// EncodeLoremRequest ...
 func EncodeLoremRequest(_ context.Context, req *http.Request, request interface{}) error {
 	lr := request.(LoremRequest)
 	p := "/" + lr.RequestType + "/" + strconv.Itoa(lr.Min) + "/" + strconv.Itoa(lr.Max)
@@ -58,7 +57,7 @@ func EncodeLoremRequest(_ context.Context, req *http.Request, request interface{
 	return nil
 }
 
-// decode response from Lorem Service
+// DecodeLoremResponse ...
 func DecodeLoremResponse(_ context.Context, resp *http.Response) (interface{}, error) {
 	var response LoremResponse
 	err := json.NewDecoder(resp.Body).Decode(&response)
