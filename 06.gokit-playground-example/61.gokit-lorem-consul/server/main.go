@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	var (
 		// 由于consul服务运行在docker或compose, 所以这两个地址一定要正确.
 		consulAddr    = "consul-svc"

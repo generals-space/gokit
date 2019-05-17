@@ -80,14 +80,14 @@ func main() {
 	// 此管理器监听instancer内服务实例的的变化(如掉线, 新增服务实例等), 通过Factory动态更新创建的endpointer.
 	endpointer := sd.NewEndpointer(instancer, LoremFactory, logger)
 
-	// 这里是我自己加的.
-	// 如果没有在consul中发现目标服务, 则return, 不再尝试发送请求.
-	// 不过如果服务不存在, 应该到不了这里, 在instancer处就会报错的? 待验证<???>.
-	endpointList, err := endpointer.Endpoints()
-	if len(endpointList) == 0 {
-		fmt.Println("endpoints not found")
-		return
-	}
+	// 这里是我自己加的. 如果没有在consul中发现目标服务, 则return, 不再尝试发送请求.
+	// 其实在实际场景中不应加这句, 因为如果使用compose同时启动server与client时,
+	// server可能还未来得及启动, client运行到这里一定会退出.
+	// endpointList, err := endpointer.Endpoints()
+	// if len(endpointList) == 0 {
+	// 	fmt.Println("endpoints not found")
+	// 	return
+	// }
 
 	// 负载均衡器
 	balancer := lb.NewRoundRobin(endpointer)

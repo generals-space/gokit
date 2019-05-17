@@ -2,6 +2,7 @@ package lorem_consul
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	golorem "github.com/drhodes/golorem"
@@ -36,6 +37,7 @@ func (LoremService) Lorem(requestType string, min, max int) (result string, err 
 	} else {
 		err = ErrRequestTypeNotFound
 	}
+	fmt.Println("=====================")
 	return
 }
 
