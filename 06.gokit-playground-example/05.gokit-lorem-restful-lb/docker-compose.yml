@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  server1:
+    image: gokit-lorem-restful-lb
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/05.gokit-lorem-restful-lb
+    environment:
+      SERVER_ADDR: server1
+      SERVER_PORT: "8080"
+    command: ["go", "run", "server/main.go"]
+
+  server2:
+    image: gokit-lorem-restful-lb
+    ports:
+      - 8081:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/05.gokit-lorem-restful-lb
+    environment:
+      SERVER_ADDR: server2
+      SERVER_PORT: "8080"
+    command: ["go", "run", "server/main.go"]
+
+  client:
+    image: gokit-lorem-restful-lb
+    ports:
+      - 8090:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/05.gokit-lorem-restful-lb
+    environment:
+      SERVER_ADDR: ## 留空
+      SERVER_PORT: "8080"
+      SERVER_LIST: "server1:8080,server2:8080" ## 这里写服务端地址列表
+    command: ["go", "run", "client/main.go"]
