@@ -45,7 +45,7 @@ func Register(consulAddress, consulPort, advertiseAddress, advertisePort string)
 	rand.Seed(time.Now().UTC().UnixNano())
 	num := rand.Intn(100)
 	asr := api.AgentServiceRegistration{
-		ID:      "lorem" + strconv.Itoa(num), //unique service ID
+		ID:      "lorem" + strconv.Itoa(num),
 		Name:    "lorem",
 		Address: advertiseAddress,
 		Port:    port,

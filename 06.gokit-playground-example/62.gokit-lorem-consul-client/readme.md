@@ -10,7 +10,7 @@
 
 但是因为下一个示例, 原作中关于断路器的文章示例, 需要client作为一个服务来运行. 所以本例要延用原作的示例了...真香.
 
-使用docker-compose启动后可以通过curl直接访问两个server端, 示例如下
+使用docker-compose启动后, 可以通过curl直接访问两个server端, 示例如下
 
 ```
 $ curl -XPOST http://localhost:8081/lorem/sentence/5/20
