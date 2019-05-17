@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  consul-svc:
+    image: consul
+    ports:
+      - 8500:8500
+    command: ["agent", "-dev", "-ui", "-client=0.0.0.0"]
+
+  server1:
+    image: gokit-lorem-hystrix-01
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/71.gokit-lorem-hystrix
+    environment:
+      SERVER_ADDR: server1
+      SERVER_PORT: "8080"
+    command: ["go", "run", "server/main.go"]
+
+  server2:
+    image: gokit-lorem-hystrix-01
+    ports:
+      - 8081:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/71.gokit-lorem-hystrix
+    environment:
+      SERVER_ADDR: server2
+      SERVER_PORT: "8080"
+    command: ["go", "run", "server/main.go"]
+
+  client:
+    image: gokit-lorem-hystrix-01
+    ports:
+      - 8090:8080
+      - 9000:9000
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/71.gokit-lorem-hystrix
+    environment:
+      SERVER_ADDR: ## 留空
+      SERVER_PORT: "8080"
+      HYSTRIX_ADDR: ## 留空
+      HYSTRIX_PORT: "9000"
+    command: ["go", "run", "client/main.go"]
+
+  dashboard:
+    image: mlabouardy/hystrix-dashboard
+    ports:
+      - 8181:9002
