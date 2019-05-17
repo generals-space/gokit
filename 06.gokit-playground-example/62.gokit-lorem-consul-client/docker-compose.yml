@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  consul-svc:
+    image: consul
+    ports:
+      - 8500:8500
+    command: ["agent", "-dev", "-ui", "-client=0.0.0.0"]
+
+  server1:
+    image: gokit-lorem-consul-02
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/62.gokit-lorem-consul-client
+    environment:
+      SERVER_ADDR: server1
+      SERVER_PORT: "8080"
+    command: ["go", "run", "server/main.go"]
+
+  server2:
+    image: gokit-lorem-consul-02
+    ports:
+      - 8081:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/62.gokit-lorem-consul-client
+    environment:
+      SERVER_ADDR: server2
+      SERVER_PORT: "8080"
+    command: ["go", "run", "server/main.go"]
+
+  client:
+    image: gokit-lorem-consul-02
+    ports:
+      - 8090:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/62.gokit-lorem-consul-client
+    environment:
+      SERVER_ADDR: ## 留空
+      SERVER_PORT: "8080"
+    command: ["go", "run", "client/main.go"]
