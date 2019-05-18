@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=123456
+    volumes:
+      - ./docker/grafana_db:/var/lib/grafana grafana/grafana
+  lorem:
+    image: gokit-lorem-monitor-01
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/51.gokit-lorem-monitor
+    command: ["go", "run", "cmd/main.go"]
