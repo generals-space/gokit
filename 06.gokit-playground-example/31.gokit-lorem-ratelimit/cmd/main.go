@@ -18,7 +18,7 @@ func main() {
 	svc = lorem_rate_limit.LoremService{}
 
 	// 添加限流中间件, 1s间隔, 桶中5个令牌
-	limiter := rate.NewLimiter(rate.Every(time.Second*1), 5)
+	limiter := rate.NewLimiter(1, 5)
 	endp := lorem_rate_limit.MakeLoremEndpoint(svc) // 此句保持不变
 	endp = ratelimit.NewErroringLimiter(limiter)(endp)
 
