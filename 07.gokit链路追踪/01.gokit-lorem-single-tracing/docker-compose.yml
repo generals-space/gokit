@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
+  server:
+    image: gokit-lorem-tracing-01
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/07.gokit链路追踪/01.gokit-lorem-single-tracing
+    environment:
+      SERVER_ADDR: ## 留空
+      SERVER_PORT: "8080"
+      ZIPKIN_URL: "http://zipkin:9411/api/v2/spans"
+    command: ["go", "run", "server/main.go"]
+
+  client:
+    image: gokit-lorem-tracing-01
+    ports:
+      - 8090:8080
+    volumes:
+      - .:/go/src/github.com/generals-space/gokit/07.gokit链路追踪/01.gokit-lorem-single-tracing
+    environment:
+      SERVER_ADDR: ## 留空
+      SERVER_PORT: "8080"
+      ZIPKIN_URL: "http://zipkin:9411/api/v2/spans"
+    command: ["go", "run", "client/main.go"]
