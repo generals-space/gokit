@@ -55,6 +55,6 @@ ts=2019-05-15T14:19:39.9502211Z caller=instancer.go:48 service=lorem tags="[lore
 
 因为启动了2个服务端, 客户端也拥有负载均衡机制, 可以查看服务端日志, 看看负载均衡是否有效.
 
-另外, 在服务运行期间停止server1/server2, 你会发现client可能会出现`no endpoints available`, 但是在之后的请求就会自动调整, 转发到正常的服务中去. 如果重新启动server1/server2, 请求又会被转发进入. 比较智能.
+另外, 在服务运行期间停止server1/server2, 你会发现client可能会出现`no endpoints available`, 但是在之后的请求就会自动调整, 转发到正常的服务中去. 如果重新启动server1/server2, 请求又会被转发进入, 还是蛮智能的.
 
 还过我还是按照原作所说, 把客户端也做成了http服务. 见[62.gokit-lorem-consul-client]().

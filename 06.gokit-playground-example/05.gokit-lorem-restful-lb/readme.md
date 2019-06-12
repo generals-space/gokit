@@ -10,7 +10,7 @@
 
 本例列举出了两种方法, 都有效.
 
-使用docker-compose启动后, 连续访问客户端, 可得到如下输出.
+使用docker-compose启动后, 访问客户端, 可得到如下输出.
 
 ```
 $ curl -XPOST -d '{"requestType":"sentence", "min":5, "max":20}' http://localhost:8090/sd-lorem
