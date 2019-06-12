@@ -91,6 +91,7 @@ func main() {
 
 	// 负载均衡器
 	balancer := lb.NewRoundRobin(endpointer)
+	// loremEndpoint := balancer.Endpoint()
 	loremEndpoint := lb.Retry(1, time.Millisecond*500, balancer)
 
 	loremRequest := lorem_consul.LoremRequest{
@@ -99,15 +100,19 @@ func main() {
 		Max:         20,
 	}
 	// 通过endpoint端点对象发送请求, 超时时间为5s
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
 
 	// 原作代码中是将得到的endpoint对象当作了一个路由处理函数, 挂载到了http server上.
 	// 但这样的话, 客户端就相当于是一个路由转发的工具, 而不是具体的某一个服务了.
 	// 这里我们不那么做, 而是直接通过endpoint对象来执行一些操作.
-	msg, err := loremEndpoint(ctx, loremRequest)
-	if err != nil {
-		fmt.Println(err.Error())
+	for {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+		msg, err := loremEndpoint(ctx, loremRequest)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		cancel()
+		fmt.Println(msg)
+
+		time.Sleep(time.Second * 5)
 	}
-	fmt.Println(msg)
 }

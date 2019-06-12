@@ -38,9 +38,9 @@ docker run -d --name consul -p 8500:8500 consul agent -dev -ui -client=0.0.0.0
 
 ## 测试
 
-构建好docker镜像后通过docker-compose启动, 最开始client应该是会启动失败的, 因为服务还没来得及注册.
+构建好docker镜像后通过docker-compose启动, 最开始client应该是会请求失败的, 因为服务还没来得及注册.
 
-当服务端注册完成后, 多次重启client, 查看其日志, 可以看到如下输出
+当服务端注册完成后, 查看其client日志, 可以看到如下输出
 
 ```
 $ docker-compose restart client
@@ -53,20 +53,8 @@ ts=2019-05-15T14:19:39.9502211Z caller=instancer.go:48 service=lorem tags="[lore
 {Tenuiter ipsos modico cui praecedentia in redire redire conprehendant eliqua os tenent iste re re quotiens ac. <nil>}
 ```
 
-因为启动了2个服务端, 客户端也拥有负载均衡机制, 可以在服务端Lorem方法的代码中添加fmt日志, 看看负载均衡是否有效.
+因为启动了2个服务端, 客户端也拥有负载均衡机制, 可以查看服务端日志, 看看负载均衡是否有效.
 
-补充:
+另外, 在服务运行期间停止server1/server2, 你会发现client可能会出现`no endpoints available`, 但是在之后的请求就会自动调整, 转发到正常的服务中去. 如果重新启动server1/server2, 请求又会被转发进入. 比较智能.
 
-打脸了.
-
-客户端通过endpoint直接执行方式访问服务端, 虽然可行, 但是负载均衡就不好用了. 每次重启客户端, 访问的都是server1. 只有当server1停止后(一段时间后, 要让consul判断其已经掉线), 重启客户端才会访问到server2.
-
-对于这一点, 我想应该是由于负载均衡器是内置在客户端中, ta内部维护着访问记录, 如果客户端服务一直存在, 这个机制就有作用. 而像我们本例所示, 客户端发现->请求->中止一连串操作, 每次请求都是新的, 所以每次都访问的是第一个节点. 如果在生命周期中连续发送两(多)个请求, 才有可能平均分发到不同服务.
-
-于是我按照原作所说, 把客户端也做成了http服务. 见[62.gokit-lorem-consul-client]().
-
-------
-
-目前我疑惑的是客户端内部需要维护什么对象? 就像数据库连接一样, 只保留consul连接对象应该是不行的吧? 那么, `instancer`, `endpointer`, 还是`balancer`?
-
-...在一个实际的场景中我的确是只保存了consul连接对象, 不过那也是因为每次发来的请求要调用的服务不同, 需要动态获取不同服务的地址.
+还过我还是按照原作所说, 把客户端也做成了http服务. 见[62.gokit-lorem-consul-client]().
