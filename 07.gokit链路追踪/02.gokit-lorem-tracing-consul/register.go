@@ -13,7 +13,7 @@ import (
 )
 
 // Register 创建sd.Registrar注册中心对象, 该对象拥有`Register()`和`Deregister()`方法, 可以实现注册与注销功能.
-func Register(consulAddress, consulPort, advertiseAddress, advertisePort, serviceName string) (registar sd.Registrar) {
+func Register(consulAddress, consulPort, advertiseAddress, advertisePort, serviceName string) (registrar sd.Registrar) {
 	var logger gkLog.Logger
 	{
 		logger = gkLog.NewLogfmtLogger(os.Stderr)
@@ -52,6 +52,6 @@ func Register(consulAddress, consulPort, advertiseAddress, advertisePort, servic
 		Tags:    []string{"lorem", "ru-rocker"},
 		Check:   &check,
 	}
-	registar = sdconsul.NewRegistrar(client, &asr, logger)
+	registrar = sdconsul.NewRegistrar(client, &asr, logger)
 	return
 }

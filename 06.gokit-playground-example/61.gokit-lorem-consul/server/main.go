@@ -29,9 +29,9 @@ func main() {
 	}
 
 	// 注册服务
-	registar := lorem_consul.Register(consulAddr, consulPort, advertiseAddr, advertisePort)
+	registrar := lorem_consul.Register(consulAddr, consulPort, advertiseAddr, advertisePort)
 	// 将go-kit类型的endpoint接口转换成http标准库接口
-	registar.Register()
+	registrar.Register()
 
 	ctx := context.Background()
 	handler := lorem_consul.MakeHTTPHandler(ctx, endpoints)
@@ -40,5 +40,5 @@ func main() {
 	fmt.Println("Starting server")
 	fmt.Println(http.ListenAndServe(advertiseAddr+":"+advertisePort, handler))
 
-	registar.Deregister()
+	registrar.Deregister()
 }
