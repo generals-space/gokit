@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  etcd-svc:
+    image: gcr.io/etcd-development/etcd:v3.3
+    ports:
+      - 2379:2379
+      - 2380:2380
+    volumes:
+      - ./data/etcd:/etcd-data
+    environment:
+      ETCD_NAME: node-01
+      ETCD_DATA_DIR: /etcd-data
+      ## 用于客户端访问
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+      ## 用于节点间通信
+      ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380 
+      ## 告诉集群中其他节点, 当前节点(node-01)的client地址(需要其他节点可以访问到). 逗号分隔
+      ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379 
+      ## 告诉集群中其他节点, 当前节点(node-01)的client地址(需要其他节点可以访问到). 逗号分隔
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://0.0.0.0:2380 
+      ETCD_INITIAL_CLUSTER: node-01=http://0.0.0.0:2380
