@@ -3,7 +3,7 @@ package lorem_grpc
 import (
 	"context"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/11.gokit-lorem-grpc/pb"
+	"gokit/pb"
 )
 
 // EncodeGRPCLoremRequest ...

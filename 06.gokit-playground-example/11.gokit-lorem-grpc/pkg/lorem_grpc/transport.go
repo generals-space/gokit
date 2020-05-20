@@ -5,7 +5,7 @@ import (
 
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/11.gokit-lorem-grpc/pb"
+	"gokit/pb"
 )
 
 // LoremServiceServer 实现lorem.proto中的Lorem服务

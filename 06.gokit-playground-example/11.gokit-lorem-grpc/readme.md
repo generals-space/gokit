@@ -1,27 +1,20 @@
 此工程为[ru-rocker/gokit-playground](https://github.com/ru-rocker/gokit-playground/tree/master/lorem-grpc)的精简版, 简化了部分代码, 添加了一些注释.
 
-首先构建项目的依赖镜像(只是下载项目依赖包)
+基本上与[04.gokit-lorem-restful-client]()完全相同, 只不过 client 与 server 服务间的通信用 grpc 形式而非 restful.
 
-```
-docker build --no-cache=true -f dep.dockerfile -t gokit-lorem-grpc .
-```
+先启动 server 服务
 
-然后通过`docker-compose`启动.
-
-```
-docker-componse up -d
+```console
+$ go run cmd/server/main.go
+Starting server
 ```
 
-由于是开发环境, 所以将项目路径挂载到容器中, 修改代码后重启服务就可以看到效果, 不用重新构建.
+然后启动 client 对 server 服务发起请求, 完成后 client 运行结束.
 
-`client`容器启动后会立即停止, 代码的执行结果要通过日志来查看.
-
+```console
+$ go run cmd/client/main.go
+Concurrunt nota re dicam fias, sim aut pecco, die appetitum.
 ```
-$ dk logs -f 11gokit-lorem-grpc_client_1
-Aula me se coepta se lux res, inter motus.
-```
-
-如果对要执行的命令有修改, 可以直接修改源代码, 然后通过`docker-compose`重启`client`即可.
 
 ------
 

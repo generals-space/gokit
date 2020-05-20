@@ -8,4 +8,22 @@
 
 可以说`time/rate`与`Juju`实现了同样的功能, 本例代码中移除了`instrument.go`, 其余操作与最初的restful工程完全相同.
 
-注意在原作示例中限流提示是写入到日志文件中的, 其实就是为endpoint增加一个log中间件, 本例中移除了日志中间件. 超过流速的请求需要通过同时手动发起n个请求以查看各响应来比较.
+注意在原作示例中限流提示是写入到日志文件中的, 其实就是为endpoint增加一个log中间件, 本例中移除了日志中间件. 超过流速的请求需要通过同时手动发起n个请求以查看各响应来比较, 本示例的上限是每秒3个请求.
+
+先启动 server 服务
+
+```console
+$ go run cmd/main.go
+Starting server at port 8080
+```
+
+常规请求如下
+
+```console
+$ curl -XPOST localhost:8080/lorem/sentence/1/20
+{"message":"Concurrunt nota re dicam fias sim aut pecco die appetitum ea mortalitatis hi."}
+```
+
+如下使用多开终端进行模拟则可以看到限流效果.
+
+![](https://gitee.com/generals-space/gitimg/raw/master/f209a5f66dc03fcd4932a27ac7b775d1.jpg)

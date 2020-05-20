@@ -8,12 +8,12 @@ import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/11.gokit-lorem-grpc"
-	"github.com/generals-space/gokit/06.gokit-playground-example/11.gokit-lorem-grpc/pb"
+	"gokit/pb"
+	"gokit/pkg/lorem_grpc"
 )
 
 func main() {
-	conn, err := grpc.Dial("server:8080", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +41,7 @@ func main() {
 /*
 // 常规的grpc客户端
 func main() {
-	conn, err := grpc.Dial("server:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 	}

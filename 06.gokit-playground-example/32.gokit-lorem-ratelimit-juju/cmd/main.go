@@ -8,7 +8,7 @@ import (
 
 	"github.com/juju/ratelimit"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/32.gokit-lorem-ratelimit-juju"
+	"gokit/pkg/lorem_rate_limit"
 )
 
 func main() {
@@ -16,9 +16,9 @@ func main() {
 	var svc lorem_rate_limit.Service
 	svc = lorem_rate_limit.LoremService{}
 
-	// 添加限流中间件, 1s间隔, 桶中5个令牌
+	// 添加限流中间件, 1s间隔, 桶中3个令牌
 	// 注意这里!
-	rlbucket := ratelimit.NewBucket(1*time.Second, 5)
+	rlbucket := ratelimit.NewBucket(1*time.Second, 3)
 	endp := lorem_rate_limit.MakeLoremEndpoint(svc)
 	endp = lorem_rate_limit.NewTokenBucketLimiter(rlbucket)(endp)
 

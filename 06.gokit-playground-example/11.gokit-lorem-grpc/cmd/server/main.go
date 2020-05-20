@@ -7,8 +7,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/11.gokit-lorem-grpc"
-	"github.com/generals-space/gokit/06.gokit-playground-example/11.gokit-lorem-grpc/pb"
+	"gokit/pb"
+	"gokit/pkg/lorem_grpc"
 )
 
 func main() {
@@ -28,5 +28,7 @@ func main() {
 	handler := lorem_grpc.NewGRPCServer(ctx, endpoints)
 	gRPCServer := grpc.NewServer()
 	pb.RegisterLoremServer(gRPCServer, handler)
+
+	fmt.Println("Starting server")
 	fmt.Println(gRPCServer.Serve(listener))
 }

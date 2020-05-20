@@ -8,7 +8,7 @@ import (
 	"github.com/go-kit/kit/ratelimit"
 	"golang.org/x/time/rate"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/31.gokit-lorem-ratelimit"
+	"gokit/pkg/lorem_rate_limit"
 )
 
 func main() {
@@ -16,8 +16,8 @@ func main() {
 	var svc lorem_rate_limit.Service
 	svc = lorem_rate_limit.LoremService{}
 
-	// 添加限流中间件, 1s间隔, 桶中5个令牌
-	limiter := rate.NewLimiter(1, 5)
+	// 添加限流中间件, 1s间隔, 桶中3个令牌
+	limiter := rate.NewLimiter(1, 3)
 	endp := lorem_rate_limit.MakeLoremEndpoint(svc) // 此句保持不变
 	endp = ratelimit.NewErroringLimiter(limiter)(endp)
 
