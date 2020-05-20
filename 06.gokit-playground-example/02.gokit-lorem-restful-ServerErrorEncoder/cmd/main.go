@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/02.gokit-lorem-restful-ServerErrorEncoder"
+	"gokit/pkg/lorem_restful"
 )
 
 func main() {

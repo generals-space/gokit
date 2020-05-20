@@ -1,22 +1,15 @@
 此工程为[ru-rocker/gokit-playground](https://github.com/ru-rocker/gokit-playground/tree/master/lorem)的精简版, 移除了日志, 及错误处理部分的代码, 将原来业务逻辑的3个方法合并成了1个, 与后面用到的示例保持统一, 并添加了详细注释.
 
-首先构建项目的依赖镜像(只是下载项目依赖包)
+运行
 
+```console
+$ go run cmd/main.go
+Starting server at port 8080
 ```
-docker build --no-cache=true -f dep.dockerfile -t gokittestdep .
-```
-
-然后通过`docker-compose`启动.
-
-```
-docker-componse up -d
-```
-
-由于是开发环境, 所以将项目路径挂载到容器中, 修改代码后重启服务就可以看到效果, 不用重新构建.
 
 项目启动后, 正常的访问结果如下
 
-```
+```console
 $ curl -XPOST localhost:8080/lorem/word/1/20
 {"message":"difficultates"}
 
