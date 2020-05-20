@@ -4,11 +4,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
-	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/department"
-	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/usermanager"
+	"gokit/common"
+	"gokit/department"
+	"gokit/usermanager"
 )
+/*
+	`main.go`入口程序其实是微服务架构中的网关API服务, 实现客户端请求的路由服务.
+	后端存在 user manager 和 department manager 两个服务.
 
+	当然实际场景中, 网关与后端微服务的连接应该是通过 restful 或是 grpc 的形式, 
+	而不是这里"内嵌"的形式.
+*/
 func main() {
 	uManagerService := usermanager.NewUserManagerService()
 	go usermanager.StartGrpcTransport(uManagerService)

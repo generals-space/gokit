@@ -8,7 +8,7 @@ import (
 
 	transport_http "github.com/go-kit/kit/transport/http"
 
-	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
+	"gokit/common"
 )
 
 func decodeHTTPRequest(request interface{}) func(context.Context, *http.Request) (interface{}, error) {

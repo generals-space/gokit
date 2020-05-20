@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 
-	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
+	"gokit/common"
 )
 
 func makeListEndpoint(srv *DepartmentManager) endpoint.Endpoint {

@@ -3,8 +3,9 @@ package usermanager
 import (
 	"context"
 
-	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
 	"github.com/go-kit/kit/endpoint"
+
+	"gokit/common"
 )
 
 // Endpoint类型要求参数和返回值必须为interface类型, 而不能是具体类型.

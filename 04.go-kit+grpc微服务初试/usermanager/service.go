@@ -8,7 +8,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/generals-space/gokit/04.go-kit+grpc微服务初试/common"
+	"gokit/common"
 )
 
 // UserManager ...
