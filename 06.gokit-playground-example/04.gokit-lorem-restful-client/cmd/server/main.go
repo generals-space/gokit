@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/04.gokit-lorem-restful-client"
+	"gokit/pkg/lorem_restful"
 )
 
 func main() {

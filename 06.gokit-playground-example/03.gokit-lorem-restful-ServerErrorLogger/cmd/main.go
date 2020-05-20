@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/03.gokit-lorem-restful-ServerErrorLogger"
+	"gokit/pkg/lorem_restful"
 )
 
 func main() {

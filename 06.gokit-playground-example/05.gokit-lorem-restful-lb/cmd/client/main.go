@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -16,7 +17,7 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/05.gokit-lorem-restful-lb"
+	"gokit/pkg/lorem_restful"
 )
 
 // LoremFactory endpoint端点的动态构造工厂.
@@ -60,13 +61,21 @@ func makeLoremClientEndpoint(instance string) endpoint.Endpoint {
 	).Endpoint()
 }
 
-func main() {
-	var (
-		advertiseAddr = os.Getenv("SERVER_ADDR")
-		advertisePort = os.Getenv("SERVER_PORT")
-		serverAddrs   = os.Getenv("SERVER_LIST")
-	)
+var (
+	cmdFlags      = flag.NewFlagSet("server", flag.ExitOnError)
+	advertiseAddr = "localhost"
+	advertisePort = "8080"
+	serverAddrs   = "8080"
+)
 
+func init() {
+	cmdFlags.StringVar(&advertiseAddr, "addr", "localhost", "监听地址")
+	cmdFlags.StringVar(&advertisePort, "port", "8090", "监听端口")
+	cmdFlags.StringVar(&serverAddrs, "serveraddr", "", "server 服务的地址列表, 以逗号分隔")
+	cmdFlags.Parse(os.Args[1:])
+}
+
+func main() {
 	// 本例重点: 手动构建endpointer的方法, 有两种.
 	// 第一种, 通过instancer对象和sd.Factory对象得到endpointer
 	var logger log.Logger

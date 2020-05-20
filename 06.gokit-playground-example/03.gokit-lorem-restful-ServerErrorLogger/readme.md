@@ -8,7 +8,8 @@
 
 我们让endpoint返回error, 访问时服务端日志将会如下
 
-```
+```console
+$ go run cmd/main.go
 Starting server at port 8080
-ts=2019-05-12T12:47:42.9487334Z caller=error_handler.go:27 err="test error"
+ts=2020-05-20T11:40:57.270062736Z caller=error_handler.go:27 err="test error"
 ```

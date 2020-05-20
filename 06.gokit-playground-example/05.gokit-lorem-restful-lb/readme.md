@@ -10,6 +10,28 @@
 
 本例列举出了两种方法, 都有效.
 
+首先启动两个 server 服务, 通过`--port`选项指定不同的端口.
+
+server 1
+
+```console
+$ go run cmd/server/main.go --port 8080
+Starting server
+```
+
+server 2
+
+```console
+$ go run cmd/server/main.go --port 8081
+Starting server
+```
+
+然后启动 client 服务.
+
+```
+go run cmd/client/main.go --port 8090 --serveraddr localhost:8080,localhost:8081
+```
+
 使用docker-compose启动后, 访问客户端, 可得到如下输出.
 
 ```

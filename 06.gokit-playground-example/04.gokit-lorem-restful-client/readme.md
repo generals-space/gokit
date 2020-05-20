@@ -16,11 +16,25 @@ http transport也有`NewClient()`函数, 但是面对restful接口, 如何将我
 
 另外提一下, 参考文章2(参考文章1中提到的示例)是一个不错的微服务工程, 代码量不多, 但确是一个完整的项目, 以后可以参考.
 
-使用docker-compose启动后, 可以通过curl直接访问server端, 示例如下
+## 运行
+
+先启动 server 服务
+
+```console
+$ go run cmd/server/main.go
+Starting server at port 8080
+```
+
+可以通过curl直接访问server端, 示例如下
 
 ```
 $ curl -XPOST http://localhost:8080/lorem/sentence/5/20
 {"message":"Inde abs contra scrutamur benedicendo quendam ita nam concurrunt diu passionis pax specto aut sectatur pede aer."}
 ```
 
-也可以多次重启client服务, 查看日志会发现请求的结果.
+也可以通过运行 client 服务对 server 服务发送请求. 这里的 client 就是调用 server 服务的另一个微服务, 不过在实际场景中, client 应该也是长驻进程, 且维持与 server 服务的长连接, 实时进行请求, 而不是像本示例中请求完成后就立即结束.
+
+```console
+$ go run cmd/client/main.go
+Cura ob pro qui tibi inveni dum qua fit donec amare.
+```

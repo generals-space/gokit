@@ -6,13 +6,13 @@ import (
 	"net/url"
 
 	"github.com/gorilla/mux"
-
-	"github.com/generals-space/gokit/06.gokit-playground-example/04.gokit-lorem-restful-client"
 	httptransport "github.com/go-kit/kit/transport/http"
+
+	"gokit/pkg/lorem_restful"
 )
 
 func main() {
-	baseURL := "http://server:8080"
+	baseURL := "http://localhost:8080"
 	urlObj, err := url.Parse(baseURL)
 	router := mux.NewRouter()
 	routes := lorem_restful.Initialize(router)
