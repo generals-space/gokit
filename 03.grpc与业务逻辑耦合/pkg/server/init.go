@@ -1,18 +1,6 @@
-package main
+package server
 
-import "errors"
-
-// ErrUserNotFound ...
-var ErrUserNotFound = errors.New("目标用户不存在")
-var ServerAddr = ":7718"
 var uManagerServiceServer *UManagerServiceServer
-
-// User ...
-type User struct {
-	Name    string
-	Title   string
-	Company string
-}
 
 func init() {
 	// 真实场景中, 业务服务就不会有这么简单了.
