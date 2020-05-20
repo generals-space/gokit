@@ -8,7 +8,7 @@ import (
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/51.gokit-lorem-monitor"
+	"gokit/pkg/lorem_metrics"
 )
 
 func main() {

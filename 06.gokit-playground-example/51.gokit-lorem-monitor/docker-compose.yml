@@ -16,9 +16,13 @@ services:
     volumes:
       - ./docker/grafana_db:/var/lib/grafana grafana/grafana
   lorem:
-    image: gokit-lorem-monitor-01
+    image: golang:1.12
     ports:
       - 8080:8080
+    environment:
+      - GO111MODULE=auto
+      - GOPROXY=https://goproxy.io
     volumes:
-      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/51.gokit-lorem-monitor
+      - .:/gokit
+    working_dir: /gokit
     command: ["go", "run", "cmd/main.go"]

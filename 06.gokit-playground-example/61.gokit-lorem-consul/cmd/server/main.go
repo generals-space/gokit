@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/62.gokit-lorem-consul-client"
+	"gokit/pkg/lorem_consul"
 )
 
 func main() {

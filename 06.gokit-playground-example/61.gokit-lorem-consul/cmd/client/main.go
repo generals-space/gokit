@@ -1,9 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
-	"net/http"
 	"net/url"
 	"os"
 	"strings"
@@ -15,10 +15,9 @@ import (
 	sdconsul "github.com/go-kit/kit/sd/consul"
 	"github.com/go-kit/kit/sd/lb"
 	httptransport "github.com/go-kit/kit/transport/http"
-	"github.com/gorilla/mux"
 	"github.com/hashicorp/consul/api"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/62.gokit-lorem-consul-client"
+	"gokit/pkg/lorem_consul"
 )
 
 func connectConsul(addr, port string) (client sdconsul.Client, err error) {
@@ -56,12 +55,8 @@ func LoremFactory(instance string) (endpoint.Endpoint, io.Closer, error) {
 }
 
 func main() {
-	var (
-		consulAddr    = "consul-svc"
-		consulPort    = "8500"
-		advertiseAddr = os.Getenv("SERVER_ADDR")
-		advertisePort = os.Getenv("SERVER_PORT")
-	)
+	consulAddr := "consul-svc"
+	consulPort := "8500"
 
 	// Logging domain.
 	var logger log.Logger
@@ -96,18 +91,28 @@ func main() {
 
 	// 负载均衡器
 	balancer := lb.NewRoundRobin(endpointer)
+	// loremEndpoint := balancer.Endpoint()
 	loremEndpoint := lb.Retry(1, time.Millisecond*500, balancer)
 
-	// POST /sd-lorem
-	// Payload: {"requestType":"word", "min":10, "max":10}
-	r := mux.NewRouter()
-	r.Methods("POST").Path("/sd-lorem").Handler(httptransport.NewServer(
-		loremEndpoint,
-		lorem_consul.DecodeLoremClientRequest,
-		lorem_consul.EncodeResponse,
-	))
+	loremRequest := lorem_consul.LoremRequest{
+		RequestType: "Sentence",
+		Min:         5,
+		Max:         20,
+	}
+	// 通过endpoint端点对象发送请求, 超时时间为5s
 
-	// 提供标准http服务
-	fmt.Println("Starting server")
-	fmt.Println(http.ListenAndServe(advertiseAddr+":"+advertisePort, r))
+	// 原作代码中是将得到的endpoint对象当作了一个路由处理函数, 挂载到了http server上.
+	// 但这样的话, 客户端就相当于是一个路由转发的工具, 而不是具体的某一个服务了.
+	// 这里我们不那么做, 而是直接通过endpoint对象来执行一些操作.
+	for {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+		msg, err := loremEndpoint(ctx, loremRequest)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		cancel()
+		fmt.Println(msg)
+
+		time.Sleep(time.Second * 5)
+	}
 }

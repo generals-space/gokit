@@ -6,35 +6,40 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/61.gokit-lorem-consul"
+	"gokit/pkg/lorem_etcd"
 )
 
 func main() {
 	var (
 		// 由于consul服务运行在docker或compose, 所以这两个地址一定要正确.
-		consulAddr    = "consul-svc"
-		consulPort    = "8500"
+		etcdURL       = os.Getenv("ETCD_URL")
+		etcdPrefix    = os.Getenv("ETCD_PREFIX")
 		advertiseAddr = os.Getenv("SERVER_ADDR")
 		advertisePort = os.Getenv("SERVER_PORT")
 	)
 
-	var svc lorem_consul.Service
-	svc = lorem_consul.LoremService{}
+	var svc lorem_etcd.Service
+	svc = lorem_etcd.LoremService{}
 
-	loremEndpoint := lorem_consul.MakeLoremEndpoint(svc)
-	healthEndpoint := lorem_consul.MakeHealthEndpoint(svc)
-	endpoints := lorem_consul.Endpoints{
+	loremEndpoint := lorem_etcd.MakeLoremEndpoint(svc)
+	endpoints := lorem_etcd.Endpoints{
 		LoremEndpoint:  loremEndpoint,
-		HealthEndpoint: healthEndpoint,
 	}
 
+	client, err := lorem_etcd.ConnectEtcd(etcdURL)
+	if err != nil {
+		panic(err)
+	}
 	// 注册服务
-	registrar := lorem_consul.Register(consulAddr, consulPort, advertiseAddr, advertisePort)
+	serviceAddr := advertiseAddr + ":" + advertisePort
+	key := etcdPrefix + serviceAddr
+	registrar := lorem_etcd.Register(client, key, serviceAddr)
 	// 将go-kit类型的endpoint接口转换成http标准库接口
 	registrar.Register()
+	fmt.Println("register success")
 
 	ctx := context.Background()
-	handler := lorem_consul.MakeHTTPHandler(ctx, endpoints)
+	handler := lorem_etcd.MakeHTTPHandler(ctx, endpoints)
 
 	// 提供标准http服务
 	fmt.Println("Starting server")

@@ -2,16 +2,21 @@
 
 原作中此示例代码基于限流示例, 本例中将限流部分移除, 同时也移除了日志中间件, 以展现监控中间件最核心的使用方法.
 
-首先构建项目的依赖镜像(只是下载项目依赖包)
-
-```
-docker build --no-cache=true -f dep.dockerfile -t gokit-lorem-monitor-01 .
-```
-
-然后通过`docker-compose`启动.
+通过`docker-compose`启动. 
 
 ```
 docker-componse up -d
+```
+
+由于要检测 vendor 中的依赖, 所以 lorem 程序启动得可能有点慢, 注意看一下容器中的日志.
+
+```console
+$ docker logs -f 51gokitloremmonitor_lorem_1
+go: extracting github.com/prometheus/client_model v0.1.0
+go: extracting github.com/prometheus/procfs v0.0.8
+go: extracting github.com/go-logfmt/logfmt v0.5.0
+...省略
+Starting server at port 8080
 ```
 
 由于是开发环境, 所以将项目路径挂载到容器中, 修改代码后重启服务就可以看到效果, 不用重新构建.

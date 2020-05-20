@@ -1,7 +1,7 @@
 package main
 
 import (
-	discovery "github.com/generals-space/gokit/06.gokit-playground-example/63.gokit-lorem-etcd/etcd-sample"
+	"sample/pkg/discovery"
 )
 
 func main() {

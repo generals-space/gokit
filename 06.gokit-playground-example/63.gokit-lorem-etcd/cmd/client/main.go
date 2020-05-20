@@ -17,7 +17,7 @@ import (
 	"github.com/gorilla/mux"
 	sdetcdv3 "github.com/go-kit/kit/sd/etcdv3"
 
-	lorem_etcd "github.com/generals-space/gokit/06.gokit-playground-example/63.gokit-lorem-etcd"
+	"gokit/pkg/lorem_etcd"
 )
 
 // LoremFactory endpoint端点的动态构造工厂.

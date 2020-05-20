@@ -8,29 +8,39 @@ services:
     command: ["agent", "-dev", "-ui", "-client=0.0.0.0"]
 
   server1:
-    image: gokit-lorem-consul-01
+    image: golang:1.12
     ports:
       - 8080:8080
-    volumes:
-      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/61.gokit-lorem-consul
     environment:
-      SERVER_ADDR: server1
-      SERVER_PORT: "8080"
-    command: ["go", "run", "server/main.go"]
+      - SERVER_ADDR=server1
+      - SERVER_PORT=8080
+      - GO111MODULE=auto
+      - GOPROXY=https://goproxy.io
+    volumes:
+      - .:/gokit
+    working_dir: /gokit
+    command: ["go", "run", "cmd/server/main.go"]
 
   server2:
-    image: gokit-lorem-consul-01
+    image: golang:1.12
     ports:
       - 8081:8080
-    volumes:
-      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/61.gokit-lorem-consul
     environment:
-      SERVER_ADDR: server2
-      SERVER_PORT: "8080"
-    command: ["go", "run", "server/main.go"]
+      - SERVER_ADDR=server2
+      - SERVER_PORT=8080
+      - GO111MODULE=auto
+      - GOPROXY=https://goproxy.io
+    volumes:
+      - .:/gokit
+    working_dir: /gokit
+    command: ["go", "run", "cmd/server/main.go"]
 
   client:
-    image: gokit-lorem-consul-01
+    image: golang:1.12
+    environment:
+      - GO111MODULE=auto
+      - GOPROXY=https://goproxy.io
     volumes:
-      - .:/go/src/github.com/generals-space/gokit/06.gokit-playground-example/61.gokit-lorem-consul
-    command: ["go", "run", "client/main.go"]
+      - .:/gokit
+    working_dir: /gokit
+    command: ["go", "run", "cmd/client/main.go"]
