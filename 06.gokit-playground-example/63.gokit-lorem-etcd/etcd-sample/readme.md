@@ -6,7 +6,7 @@
 
 在客户端运行期间, 服务端会输出
 
-```
+```console
 $ go run cmd/server/main.go
 2019-06-21 01:21:58.720398 I | Add worker workers/node-01: node-01
 2019-06-21 01:22:01.733234 I | Update worker workers/node-01: node-01
@@ -19,6 +19,6 @@ $ go run cmd/server/main.go
 2019-06-21 01:23:28.970627 I | Delete worker  workers/node-01
 ```
 
-在这个示例中, server实现了服务注册与服务发现的基本机制, client 循环执行心跳操作, 其实就是不断刷新etcd中的key, server将client注册到etcd的key保存在自己的members列表中.
+在这个示例中, `server`实现了服务注册与服务发现的基本机制, `client`循环执行心跳操作, 不断刷新`etcd`中的`key`, `server`将`client`注册到`etcd`的`key`保存在自己的members列表中.
 
-由于client端在注册时附带了TTL, 存储在etcd中的key也是有过期时间的, server监听这个key的变化, 当client终止, key由于过期而被删除, server就将该client从members列表中移除.
+由于`client`端在注册时附带了TTL, 存储在etcd中的key也是有过期时间的, server监听这个key的变化, 当client终止, key由于过期而被删除, server就将该client从members列表中移除.

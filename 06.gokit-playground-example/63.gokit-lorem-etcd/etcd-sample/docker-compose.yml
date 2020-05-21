@@ -4,8 +4,8 @@ services:
   etcd-svc:
     image: gcr.io/etcd-development/etcd:v3.3
     ports:
-      - 2379:2379
-      - 2380:2380
+      - 12379:2379
+      - 12380:2380
     volumes:
       - ./data/etcd:/etcd-data
     environment:
