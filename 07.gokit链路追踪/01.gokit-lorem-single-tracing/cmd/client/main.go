@@ -12,7 +12,7 @@ import (
 	"github.com/openzipkin/zipkin-go"
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 
-	"github.com/generals-space/gokit/07.gokit链路追踪/01.gokit-lorem-single-tracing"
+	"gokit/pkg/lorem_tracing"
 )
 
 func main() {

@@ -3,7 +3,7 @@
 1. [go-kit微服务：服务链路追踪](https://juejin.im/post/5c77bb8b6fb9a04a027b0b99)
 2. [六、go-kit 微服务请求跟踪介绍](https://hacpai.com/article/1525401758789)
 
-...本来觉得参考文章1介绍的很清晰, 直接编写一个以consul服务发现为基础的tracing服务的, 结果高看自己了, ta的架构与我的lorem示例不太一样, 于是就耸了.
+...本来觉得参考文章1介绍的很清晰, 直接编写一个以consul服务发现为基础的tracing服务的, 结果高看自己了, ta的架构与我的lorem示例不太一样, 于是就怂了.
 
 参考文章1中的示例中, gateway为用户请求的入口, 然后将请求转发给后端的子服务, 起了类似路由的功能. 本来这与我们的consul示例[62.gokit-lorem-consul-client](https://github.com/generals-space/gokit/tree/master/06.gokit-playground-example/62.gokit-lorem-consul-client)的思路是差不多的, 但是ta集成consul api的方法是直接使用consul官方提供的client., 而不是go-kit内置的`sd`库中的client. 
 
