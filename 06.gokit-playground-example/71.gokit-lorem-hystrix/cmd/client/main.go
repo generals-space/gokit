@@ -20,7 +20,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/consul/api"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/71.gokit-lorem-hystrix"
+	"gokit/pkg/lorem_hystrix"
 )
 
 func connectConsul(addr, port string) (client sdconsul.Client, err error) {

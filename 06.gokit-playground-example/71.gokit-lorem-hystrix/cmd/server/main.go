@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/generals-space/gokit/06.gokit-playground-example/71.gokit-lorem-hystrix"
+	"gokit/pkg/lorem_hystrix"
 )
 
 func main() {
