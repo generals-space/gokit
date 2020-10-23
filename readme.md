@@ -20,24 +20,24 @@
 本仓库中示例06.[gokit-playground-example](https://github.com/generals-space/gokit/tree/master/06.gokit-playground-example)是最完整的系列示例, 取自示例05.[gokit系列文章(译)](https://github.com/generals-space/gokit/tree/master/05.gokit%E7%B3%BB%E5%88%97%E6%96%87%E7%AB%A0(%E8%AF%91)), 但是添加了很多注释, 比较复杂的示例也做了拆分, 理解起来会更容易.
 
 - 06.gokit-playground-example: **05.gokit系列文章(译)** 部分的示例代码
-    - [01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme): 按照 go-kit 模式提供的 lorem 服务.
-    - [02.gokit-lorem-restful-ServerErrorEncoder](./06.gokit-playground-example/02.gokit-lorem-restful-ServerErrorEncoder/readme): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme)的基础上, 添加对错误信息json化的操作.
-    - [03.gokit-lorem-restful-ServerErrorLogger](./06.gokit-playground-example/03.gokit-lorem-restful-ServerErrorLogger/readme): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme)的基础上, 添加对错误信息日志打印的操作.
-    - [04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme)的基础上, 添加 client 服务, 作为微服务中的一环进行通信.
-    - [05.gokit-lorem-restful-lb](./06.gokit-playground-example/05.gokit-lorem-restful-lb/readme): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme)的基础上, 对 server 服务做**负载均衡**, 但是没有使用**服务发现**, 在启动 client 服务时需要把 server 服务的服务列表传入.
-    - [11.gokit-lorem-grpc](./06.gokit-playground-example/11.gokit-lorem-grpc/readme): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme)的基础上, 进行 grpc 改造, client 与 server 间通信使用 grpc 而非 restful 形式.
-    - [21.gokit-lorem-logging](./06.gokit-playground-example/21.gokit-lorem-logging/readme): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme)的基础上, 添加 go-kit 内置的日志中间件. 
-    - [31.gokit-lorem-ratelimit](./06.gokit-playground-example/31.gokit-lorem-ratelimit/readme): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme)的基础上, 添加**限流**机制, 使用`golang.org/x/time/rate`限流器.
-    - [32.gokit-lorem-ratelimit-juju](./06.gokit-playground-example/32.gokit-lorem-ratelimit-juju/readme): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme)的基础上, 添加**限流**机制, 使用`juju/ratelimit`限流器.
-    - [51.gokit-lorem-monitor](./06.gokit-playground-example/51.gokit-lorem-monitor/readme): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme)的基础上, 添加**监控**操作, 使用`prometheus`进行日志埋点, 使用`grafana`查看.
-    - [61.gokit-lorem-consul](./06.gokit-playground-example/61.gokit-lorem-consul/readme): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme)的基础上, 使用`consul`中间件做**负载均衡**与**服务发现**.
-    - [62.gokit-lorem-consul-client](./06.gokit-playground-example/62.gokit-lorem-consul-client/readme): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme)的基础上, 使用`consul`中间件做**负载均衡**与**服务发现**. 在本例中, client 的角色类似于微服务中的 gateway, 将来自用户的请求转发给后端 server 服务.
-    - [61.gokit-lorem-consul](./06.gokit-playground-example/61.gokit-lorem-consul/readme): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme)的基础上, 使用`etcd`中间件做**负载均衡**与**服务发现**.
-    - [71.gokit-lorem-hystrix](./06.gokit-playground-example/71.gokit-lorem-hystrix/readme): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme)的基础上, 集成`hystrix-go/hystrix`断路器工具.
+    - [01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md): 按照 go-kit 模式提供的 lorem 服务.
+    - [02.gokit-lorem-restful-ServerErrorEncoder](./06.gokit-playground-example/02.gokit-lorem-restful-ServerErrorEncoder/readme.md): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md)的基础上, 添加对错误信息json化的操作.
+    - [03.gokit-lorem-restful-ServerErrorLogger](./06.gokit-playground-example/03.gokit-lorem-restful-ServerErrorLogger/readme.md): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md)的基础上, 添加对错误信息日志打印的操作.
+    - [04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md)的基础上, 添加 client 服务, 作为微服务中的一环进行通信.
+    - [05.gokit-lorem-restful-lb](./06.gokit-playground-example/05.gokit-lorem-restful-lb/readme.md): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md)的基础上, 对 server 服务做**负载均衡**, 但是没有使用**服务发现**, 在启动 client 服务时需要把 server 服务的服务列表传入.
+    - [11.gokit-lorem-grpc](./06.gokit-playground-example/11.gokit-lorem-grpc/readme.md): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md)的基础上, 进行 grpc 改造, client 与 server 间通信使用 grpc 而非 restful 形式.
+    - [21.gokit-lorem-logging](./06.gokit-playground-example/21.gokit-lorem-logging/readme.md): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md)的基础上, 添加 go-kit 内置的日志中间件. 
+    - [31.gokit-lorem-ratelimit](./06.gokit-playground-example/31.gokit-lorem-ratelimit/readme.md): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md)的基础上, 添加**限流**机制, 使用`golang.org/x/time/rate`限流器.
+    - [32.gokit-lorem-ratelimit-juju](./06.gokit-playground-example/32.gokit-lorem-ratelimit-juju/readme.md): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md)的基础上, 添加**限流**机制, 使用`juju/ratelimit`限流器.
+    - [51.gokit-lorem-monitor](./06.gokit-playground-example/51.gokit-lorem-monitor/readme.md): 在[01.gokit-lorem-restful](./06.gokit-playground-example/01.gokit-lorem-restful/readme.md)的基础上, 添加**监控**操作, 使用`prometheus`进行日志埋点, 使用`grafana`查看.
+    - [61.gokit-lorem-consul](./06.gokit-playground-example/61.gokit-lorem-consul/readme.md): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md)的基础上, 使用`consul`中间件做**负载均衡**与**服务发现**.
+    - [62.gokit-lorem-consul-client](./06.gokit-playground-example/62.gokit-lorem-consul-client/readme.md): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md)的基础上, 使用`consul`中间件做**负载均衡**与**服务发现**. 在本例中, client 的角色类似于微服务中的 gateway, 将来自用户的请求转发给后端 server 服务.
+    - [61.gokit-lorem-consul](./06.gokit-playground-example/61.gokit-lorem-consul/readme.md): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md)的基础上, 使用`etcd`中间件做**负载均衡**与**服务发现**.
+    - [71.gokit-lorem-hystrix](./06.gokit-playground-example/71.gokit-lorem-hystrix/readme.md): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md)的基础上, 集成`hystrix-go/hystrix`断路器工具.
 
 - 07.gokit链路追踪: **05.gokit系列文章(译)** 没有涉及到链路追踪的话题, 这里单独列出.
-    - [01.gokit-lorem-single-tracing](./06.gokit-playground-example/01.gokit-lorem-single-tracing/readme): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme)的基础上, 使用`zipkin`中间件添加**链路**追踪机制.
-    - [02.gokit-lorem-tracing-consul](./06.gokit-playground-example/02.gokit-lorem-tracing-consul/readme): 在上例基础上, 继续添加 consul 完成**负载均衡**与**服务发现**功能.
+    - [01.gokit-lorem-single-tracing](./06.gokit-playground-example/01.gokit-lorem-single-tracing/readme.md): 在[04.gokit-lorem-restful-client](./06.gokit-playground-example/04.gokit-lorem-restful-client/readme.md)的基础上, 使用`zipkin`中间件添加**链路**追踪机制.
+    - [02.gokit-lorem-tracing-consul](./06.gokit-playground-example/02.gokit-lorem-tracing-consul/readme.md): 在上例基础上, 继续添加 consul 完成**负载均衡**与**服务发现**功能.
 
 ## 历史记录
 
